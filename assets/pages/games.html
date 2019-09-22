@@ -1,0 +1,51 @@
+<div id="games">
+</div>
+
+<script>
+    const { ipcRenderer } = electron;
+    const games = document.querySelector('#games');
+    ipcRenderer.on('item:add', function (e, appid) {
+        addApp(appid);
+    });
+
+    ipcRenderer.on('item:clear', function () {
+        games.innerHTML = '';
+    });
+
+    window.removeItem = function(e) {
+        e.target.parentElement.remove();
+    }
+
+    window.changeSteamUser = function (){
+        changeUser({
+            name: "SteamCTest01",
+            pass: "test1877"
+        });
+    }
+
+    window.parseData = function(data){
+        for(app of data){
+            const div = document.createElement('div');
+            const img = document.createElement('img');
+            const name = document.createElement('div');
+            div.className = 'display';
+            img.className = 'display-img';
+            name.className = 'display-name';
+            name.innerHTML = app.displayName;
+            div.setAttribute("ondblclick", "openApp("+app.appId+")");
+
+            img.src = 'https://steamcdn-a.akamaihd.net/steam/apps/' + app.appId + '/header.jpg?t=1560298457';
+            div.appendChild(img);
+            div.appendChild(name);
+            games.appendChild(div);
+        }
+    }
+
+    window.loadDataUser = function(){
+        getAppsFromUser(function(data){
+            parseData(data);
+        }, "76561198242115578");
+    }
+
+    window.loadDataUser();
+</script>

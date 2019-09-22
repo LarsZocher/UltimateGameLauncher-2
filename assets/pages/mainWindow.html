@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>UltimateGameLauncher</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <script src="../js/steam.js"></script>
+</head>
+
+<body>
+    <div id="head">
+        <div id="header"></div>
+        <div id="navbar-container">
+            <ul id="navbar">
+                <li>
+                    <div class="navbar-header">UltimateGameLauncher</div>
+                </li>
+                <li>
+                    <div class="navbar-games-active" onclick="loadPage('games.html')">Games</div>
+                </li>
+                <li>
+                        <div class="navbar-games-active" onclick="loadPage('users.html')">Users</div>
+                    </li>
+                <li>
+                    <div class="navbar-header" onclick="window.loadDataUser()">Load data</div>
+                </li>
+                <li>
+                    <div class="navbar-header" onclick="changeSteamUser()">Change user</div>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div id="content"></div>
+    <script>
+        const electron = require("electron");
+        const fs = require('fs');
+
+        function loadPage(page){
+            console.log("loading in content: "+__dirname +"\\"+ page);
+            fs.readFile(__dirname +"\\"+ page, (err, data) => {
+                document.getElementById('content').innerHTML = data
+                var scripts = document.getElementById('content').getElementsByTagName("script");
+                for (var i = 0; i < scripts.length; i++) {
+                    eval(scripts[i].innerText);
+                }
+                console.log("A:"+scripts.length);
+            });
+        }
+
+        loadPage("games.html");
+    </script>
+</body>
+
+</html>
