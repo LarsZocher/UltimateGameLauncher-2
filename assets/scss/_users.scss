@@ -1,0 +1,33 @@
+#users{
+    margin: 20px 0 20px 20px;
+    color: #d2d2d2;
+    font-size: 25px;
+}
+
+.u-display {
+    margin: 0 20px 20px 0;
+    height: 100px;
+    background: var(--main-bg-light);
+    float: left;
+    position: relative;
+    width: 200px;
+}
+
+.u-name {
+    margin: 10px;
+}
+
+.u-btn-switch {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    right: 10px;
+    background: var(--main-primary);
+    text-align: center;
+    font-size: 15px;
+    font-weight: bold;
+    color: #fff;
+    height: 30px;
+    line-height: 30px;
+    cursor: pointer;
+}

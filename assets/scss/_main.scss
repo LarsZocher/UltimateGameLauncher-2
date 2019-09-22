@@ -1,0 +1,108 @@
+:root{
+    --main-primary: #0077b9;
+    --main-bg: #202020;
+    --main-bg-light: #303030;
+    --main-text: #c4c4c4;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html{
+    height: 100%;
+}
+
+body{
+    background-color: var(--main-bg);
+    height: 100%;
+}
+
+div{
+    float: left;
+}
+
+#navbar-container{
+    margin: 0px;
+    width: 100%;
+    background-color: transparent;
+    padding-bottom: 0px;
+}
+
+#head{
+    position: fixed;
+    width: 100%;
+    z-index: 100;
+}
+
+#header {
+    height: 35px;
+    background: transparent;
+    width: 100%;
+    -webkit-app-region: drag;
+}
+
+#navbar{
+    list-style-type: none;
+    float: right;
+    margin-top: 15px;
+    padding-right: 20px;
+}
+
+#navbar li{
+    float: left;
+    margin-right: 20px;
+    text-transform: uppercase;
+}
+.navbar-header{
+    color: var(--main-text);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 20px;
+    text-shadow: 0px 0px 11px #000000;
+    transition: color 0.2s ease-in-out;
+}
+
+.navbar-header:hover{
+    color: #fff;
+}
+
+.navbar-games-active{
+    color: #fff;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 20px;
+    font-weight: bold;
+    text-shadow: 0px 0px 11px #000000;
+}
+
+#content{
+    width: 100%;
+    overflow: auto;
+    background-color: var(--main-bg);
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    top: 0;
+}
+
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+::-webkit-scrollbar-button {
+  width: 0px;
+  height: 0px;
+}
+::-webkit-scrollbar-thumb {
+  background: #969696;
+  border: 0px none #ffffff;
+  border-radius: 50px;
+}
+::-webkit-scrollbar-track {
+  background: #66666600;
+  border: 0px none #ffffff;
+  border-radius: 50px;
+}
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
