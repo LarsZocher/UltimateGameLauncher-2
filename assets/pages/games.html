@@ -1,4 +1,26 @@
-<div id="games">
+<aside id="games-list">
+    <div id="games">
+
+    </div>
+</aside>
+<div id="games-main">
+    <section id="header-section">
+        <div id="header-img"></div>
+        <h2 id="header-name"></h2>
+    </section>
+    <section id="game-content">
+        <ul id="menu-items">
+            <li>
+                <div class="launch-btn">Launch</div>
+            </li>
+            <li>
+                <div class="info-item">
+                    <div class="info-title">Start with</div>
+                    <div class="info-value">BubbleEgg</div>
+                </div>
+            </li>
+        </ul>
+    </section>
 </div>
 
 <script>
@@ -33,19 +55,53 @@
             name.className = 'display-name';
             name.innerHTML = app.displayName;
             div.setAttribute("ondblclick", "openApp("+app.appId+")");
+            div.setAttribute("onClick", "window.setCurrentGame("+app.appId+")")
 
-            img.src = 'https://steamcdn-a.akamaihd.net/steam/apps/' + app.appId + '/header.jpg?t=1560298457';
+            img.src = 'https://steamcdn-a.akamaihd.net/steamcommunity/public/images/apps/'+app.appId+'/'+app.iconName+'.ico';
             div.appendChild(img);
             div.appendChild(name);
             games.appendChild(div);
         }
     }
 
+    window.setCurrentGame = function(appId){
+        //https://steamcdn-a.akamaihd.net/steam/apps/4000/library_hero.jpg?t=1568744817
+
+        const header = document.getElementById('header-img');
+        const name = document.getElementById('header-name');
+
+        image('https://steamcdn-a.akamaihd.net/steam/apps/'+appId+'/library_hero.jpg?t=1568744817', {
+            success : function () {
+                header.style.backgroundImage = "url('https://steamcdn-a.akamaihd.net/steam/apps/"+appId+"/library_hero.jpg?t=1568744817')";
+            },
+            failure : function () {
+                header.style.backgroundImage = "url('https://steamcdn-a.akamaihd.net/steam/apps/"+appId+"/header.jpg?t=1568744817')";
+            },
+        });
+        getAppsById(function(app) {
+            name.innerText = app[0].displayName;
+        }, [appId])
+    }
+
     window.loadDataUser = function(){
         getAppsFromUser(function(data){
             parseData(data);
-        }, "76561198242115578");
+        }, "76561198082081394"); //76561198242115578 // 76561198085862571
     }
 
     window.loadDataUser();
+
+    (function(){
+
+        var parallax = document.querySelector("#header-img"),
+            speed = 0.5;
+
+        document.getElementById("games-main").onscroll = function(){
+            var windowYOffset = document.getElementById("games-main").scrollTop;
+            var elBackgrounPos = "50% " + (windowYOffset * speed) + "px";
+
+            parallax.style.backgroundPosition = elBackgrounPos;
+        };
+
+    })();
 </script>
