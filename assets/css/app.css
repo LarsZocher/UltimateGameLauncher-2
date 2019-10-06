@@ -189,14 +189,20 @@ div {
 .launch-btn {
   width: 240px;
   height: 50px;
-  background: linear-gradient(to right, #2eb8d1 0%, #0082e5 100%);
+  background: linear-gradient(to right, #0067b6 0%, #00d9ff 100%);
   color: #FFF;
   line-height: 50px;
   font-size: 25px;
   text-transform: uppercase;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   text-align: center;
-  letter-spacing: 1px; }
+  letter-spacing: 1px;
+  cursor: pointer;
+  background-size: 450px 1px;
+  transition: background 1s ease-out; }
+
+.launch-btn:hover {
+  background-position-x: -210px; }
 
 #users {
   margin: 100px 0 20px 20px;
