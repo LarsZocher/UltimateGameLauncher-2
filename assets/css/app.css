@@ -12,7 +12,11 @@ html {
 
 body {
   background-color: var(--main-bg);
-  height: 100%; }
+  height: 100%;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none; }
 
 div {
   float: left; }
@@ -49,7 +53,7 @@ div {
   color: var(--main-text);
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   font-size: 20px;
-  text-shadow: 0px 0px 9px #000000, 0px 0px 9px #000000, 0px 0px 9px #000000;
+  text-shadow: 0px 0px 9px #000000, 0px 0px 9px #000000;
   transition: color 0.2s ease-in-out; }
 
 .navbar-header:hover {
@@ -60,7 +64,7 @@ div {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   font-size: 20px;
   font-weight: bold;
-  text-shadow: 0px 0px 9px #000000, 0px 0px 9px #000000, 0px 0px 9px #000000; }
+  text-shadow: 0px 0px 9px #000000, 0px 0px 9px #000000; }
 
 #content {
   width: 100%;
@@ -97,15 +101,23 @@ div {
   position: relative;
   width: 300px;
   height: 100vh;
-  float: left; }
+  float: left;
+  background: #111111; }
+  #games-list .gl-headline {
+    margin: 0;
+    color: #FFF;
+    font-size: 20px;
+    font-weight: bold;
+    position: absolute;
+    top: 65px;
+    left: 20px; }
 
 #games {
+  margin: 100px 0 0 20px;
   position: relative;
-  width: 100%;
-  height: 100vh;
-  padding: 10px 0 0 10px;
-  overflow: scroll;
-  background: var(--main-bg-light); }
+  width: calc(100% - 20px);
+  height: calc(100vh - 100px);
+  overflow-y: auto; }
 
 #header-section {
   position: relative;
@@ -129,18 +141,17 @@ div {
 #games-main {
   width: calc(100% - 300px);
   height: 100vh;
-  overflow-y: scroll;
+  overflow-y: auto;
   background: var(--main-bg); }
 
 #game-content {
   width: 100%;
-  height: 90vh; }
+  height: calc(90vh - 400px); }
 
 .display {
   width: 100%;
   height: 30px;
   padding: 5px 0 5px 0;
-  background-color: var(--main-bg-light);
   position: relative;
   overflow: hidden; }
 
@@ -189,7 +200,7 @@ div {
 .launch-btn {
   width: 240px;
   height: 50px;
-  background: linear-gradient(to right, #0067b6 0%, #00d9ff 100%);
+  background: linear-gradient(to right, #0064b1 0%, #0fdbff 100%);
   color: #FFF;
   line-height: 50px;
   font-size: 25px;
@@ -199,7 +210,7 @@ div {
   letter-spacing: 1px;
   cursor: pointer;
   background-size: 450px 1px;
-  transition: background 1s ease-out; }
+  transition: background .6s ease-out; }
 
 .launch-btn:hover {
   background-position-x: -210px; }

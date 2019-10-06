@@ -33,6 +33,8 @@ app.on('ready', function () {
     //Build menu from template
     const mainMenu = Menu.buildFromTemplate(mainMenuTemplate);
     Menu.setApplicationMenu(mainMenu);
+
+
 });
 
 //Handle add window

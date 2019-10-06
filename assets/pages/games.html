@@ -1,4 +1,5 @@
 <aside id="games-list">
+    <h2 class="gl-headline">Steam</h2>
     <div id="games">
 
     </div>
@@ -11,12 +12,18 @@
     <section id="game-content">
         <ul id="menu-items">
             <li>
-                <div class="launch-btn">Launch</div>
+                <div class="launch-btn" onclick="window.startCurrentGame()">Launch</div>
             </li>
             <li>
                 <div class="info-item">
                     <div class="info-title">Start with</div>
-                    <div class="info-value">BubbleEgg</div>
+                    <div class="info-value" id="info-user">BubbleEgg</div>
+                </div>
+            </li>
+            <li>
+                <div class="info-item">
+                    <div class="info-title">Developer</div>
+                    <div class="info-value" id="info-dev"></div>
                 </div>
             </li>
         </ul>
@@ -24,6 +31,8 @@
 </div>
 
 <script>
+    var currentGame;
+
     const { ipcRenderer } = electron;
     const games = document.querySelector('#games');
     ipcRenderer.on('item:add', function (e, appid) {
@@ -46,8 +55,12 @@
     }
 
     window.parseData = function(data){
-        data = sortData(data);
         for(app of data){
+            if(typeof app_data[app.appId] === 'undefined'){
+                app_data[app.appId] = {};
+                app_data[app.appId]["user"] = "mindestorm";
+            }
+
             const div = document.createElement('div');
             const img = document.createElement('img');
             const name = document.createElement('div');
@@ -63,6 +76,11 @@
             div.appendChild(name);
             games.appendChild(div);
         }
+        app_saveData();
+    }
+
+    window.startCurrentGame = function() {
+        openApp(currentGame.appId, app_data[currentGame.appId].user);
     }
 
     function sortData(data){
@@ -90,16 +108,25 @@
         });
         getAppsById(function(app) {
             name.innerText = app[0].displayName;
+            currentGame = app[0];
+            document.querySelector("#info-user").innerText = app_data[appId].user;
+            document.querySelector("#info-dev").innerText = app[0].developer;
         }, [appId])
     }
 
-    window.loadDataUser = function(){
+    window.loadDataUser = function(first = false){
         getAppsFromUser(function(data){
+            data = sortData(data);
             parseData(data);
-        }, "76561198082081394"); //76561198242115578 // 76561198085862571
+            if(first&&data[0].appId!=null){
+                window.setCurrentGame(data[0].appId);
+            }
+        }, "76561198242115578"); //76561198242115578 // 76561198085862571
     }
 
-    window.loadDataUser();
+    app_loadData();
+
+    window.loadDataUser(true);
 
     (function(){
 

@@ -10,7 +10,7 @@
 </div>
 
 <script>
-    window.changeUserNew = async function(name){
+    window.changeUserNew = async function(name, appId = null){
         var running = await isRunning();
         if(running){
             window.closeSteam();
@@ -22,7 +22,10 @@
             key:  '\\Software\\Valve\\Steam'
         });
         regKey.set('AutoLoginUser', Registry.REG_SZ, name, function() {
-            window.openSteam();
+            if(appId!=null)
+                openApp(appId);
+            else
+                window.openSteam();
         });
     }
 

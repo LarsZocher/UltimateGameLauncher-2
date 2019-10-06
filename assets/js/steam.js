@@ -29,7 +29,13 @@ function getAppsFromUser(cb, userId, onlyGames = true){
     xmlhttp.send();
 }
 
-function openApp(appid, dev = false){
+async function openApp(appid, user = null){
+    console.log("[Steam] Opening app "+appid+" with user '"+user+"'");
+    var cu = await getCurrentUser();
+    console.log("[Steam] "+cu+" "+ user + " - " + (cu!=user))
+    if(user!=null && cu != user){
+        await changeUser(user, false);
+    }
     var executablePath = "\"D:\\Program Files (x86)\\Steam\\Steam.exe\" -applaunch "+appid;
     const { exec } = require('child_process');
     exec(executablePath, (error, stdout, stderr) => {
@@ -91,6 +97,7 @@ async function getLastUser(){
 
 async function getCurrentUser(){
     var li = await isLoggedIn();
+    console.log("[Steam] Logged in: "+li)
     if(li){
         return await getLastUser();
     }
@@ -98,23 +105,41 @@ async function getCurrentUser(){
 }
 
 
-async function changeUser(user){
+async function changeUser(name, openSteam = true){
+    console.log("[Steam] Changing user to: "+name);
     var running = await isRunning();
-    var cUser = await getCurrentUser();
-    if(running && cUser!=user["name"]){
-        var executablePath = "taskkill /F /IM steam.exe";
-        const { exec } = require('child_process');
-        exec(executablePath, (error, stdout, stderr) => {
-            if (error) {
-                console.error(`exec error: ${error}`);
-                return;
-            }
-        });
+    if(running){
+        closeSteam();
         await timeout(1000);
     }
+    var Registry = require('winreg')
+    ,   regKey = new Registry({
+        hive: Registry.HKCU,
+        key:  '\\Software\\Valve\\Steam'
+    });
+    let p = new Promise((res, rej) => {
+        regKey.set('AutoLoginUser', Registry.REG_SZ, name, function() {
+            if(openSteam){
+                openSteam();
+            }
+            res();
+        });
+    });
+    await p;
+}
 
-    console.log("Starting steam client - "+user["name"]);
-    var executablePath = "\"D:\\Program Files (x86)\\Steam\\Steam.exe\" -login "+user["name"] + " " + user["pass"];
+function closeSteam() {
+    console.log("[Steam] Stopping steam");
+    var executablePath = "taskkill /F /IM steam.exe";
+    const { exec } = require('child_process');
+    exec(executablePath, (error, stdout, stderr) => {
+        
+    });
+}
+
+function openSteam() {
+    console.log("[Steam] Starting steam");
+    var executablePath = "\"D:\\Program Files (x86)\\Steam\\Steam.exe\"";
     const { exec } = require('child_process');
     exec(executablePath, (error, stdout, stderr) => {
         
