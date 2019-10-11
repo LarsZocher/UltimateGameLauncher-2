@@ -1,182 +1,282 @@
 {
-  "10": {
-    "user": "mindestorm"
-  },
-  "20": {
-    "user": "mindestorm"
-  },
-  "30": {
-    "user": "mindestorm"
-  },
-  "40": {
-    "user": "mindestorm"
-  },
-  "50": {
-    "user": "mindestorm"
-  },
-  "60": {
-    "user": "mindestorm"
-  },
-  "70": {
-    "user": "mindestorm"
-  },
-  "80": {
-    "user": "mindestorm"
-  },
-  "100": {
-    "user": "mindestorm"
-  },
-  "130": {
-    "user": "mindestorm"
-  },
-  "211": {
-    "user": "mindestorm"
-  },
-  "220": {
-    "user": "mindestorm"
-  },
-  "240": {
-    "user": "mindestorm"
-  },
-  "280": {
-    "user": "mindestorm"
-  },
-  "300": {
-    "user": "mindestorm"
-  },
-  "320": {
-    "user": "mindestorm"
-  },
-  "340": {
-    "user": "mindestorm"
-  },
-  "360": {
-    "user": "mindestorm"
-  },
-  "380": {
-    "user": "mindestorm"
-  },
-  "400": {
-    "user": "mindestorm"
-  },
-  "420": {
-    "user": "mindestorm"
-  },
-  "440": {
-    "user": "mindestorm"
-  },
-  "500": {
-    "user": "mindestorm"
-  },
-  "550": {
-    "user": "mindestorm"
-  },
-  "620": {
-    "user": "mindestorm"
-  },
-  "730": {
-    "user": "mindestorm"
-  },
-  "4000": {
-    "user": "mindestorm"
-  },
-  "205790": {
-    "user": "mindestorm"
-  },
-  "222880": {
-    "user": "mindestorm"
-  },
-  "225540": {
-    "user": "mindestorm"
-  },
-  "236390": {
-    "user": "mindestorm"
-  },
-  "243470": {
-    "user": "mindestorm"
-  },
-  "251570": {
-    "user": "mindestorm"
-  },
-  "252950": {
-    "user": "mindestorm"
-  },
-  "271590": {
-    "user": "bubbleegg2"
-  },
-  "285900": {
-    "user": "mindestorm"
-  },
-  "286570": {
-    "user": "mindestorm"
-  },
-  "291480": {
-    "user": "mindestorm"
-  },
-  "301520": {
-    "user": "mindestorm"
-  },
-  "304930": {
-    "user": "mindestorm"
-  },
-  "317400": {
-    "user": "mindestorm"
-  },
-  "346110": {
-    "user": "mindestorm"
-  },
-  "362890": {
-    "user": "mindestorm"
-  },
-  "407530": {
-    "user": "mindestorm"
-  },
-  "427250": {
-    "user": "mindestorm"
-  },
-  "431960": {
-    "user": "mindestorm"
-  },
-  "450390": {
-    "user": "mindestorm"
-  },
-  "460930": {
-    "user": "mindestorm"
-  },
-  "477160": {
-    "user": "mindestorm"
-  },
-  "485610": {
-    "user": "mindestorm"
-  },
-  "517630": {
-    "user": "mindestorm"
-  },
-  "578080": {
-    "user": "mindestorm"
-  },
-  "588430": {
-    "user": "mindestorm"
-  },
-  "607200": {
-    "user": "mindestorm"
-  },
-  "619910": {
-    "user": "mindestorm"
-  },
-  "643270": {
-    "user": "mindestorm"
-  },
-  "652980": {
-    "user": "mindestorm"
-  },
-  "703940": {
-    "user": "mindestorm"
-  },
-  "823130": {
-    "user": "mindestorm"
-  },
-  "1085660": {
-    "user": "mindestorm"
+  "users": [
+    {
+      "name": "mindestorm",
+      "steam64id": "76561198242115578"
+    },
+    {
+      "name": "bubbleegg2",
+      "steam64id": "76561198403373982"
+    },
+    {
+      "name": "briggi123",
+      "steam64id": "76561198302481404"
+    }
+  ],
+  "apps": {
+    "10": {
+      "user": "mindestorm"
+    },
+    "20": {
+      "user": "mindestorm"
+    },
+    "30": {
+      "user": "mindestorm"
+    },
+    "40": {
+      "user": "mindestorm"
+    },
+    "50": {
+      "user": "mindestorm"
+    },
+    "60": {
+      "user": "mindestorm"
+    },
+    "70": {
+      "user": "mindestorm"
+    },
+    "80": {
+      "user": "mindestorm"
+    },
+    "100": {
+      "user": "mindestorm"
+    },
+    "130": {
+      "user": "mindestorm"
+    },
+    "211": {
+      "user": "mindestorm"
+    },
+    "220": {
+      "user": "mindestorm"
+    },
+    "240": {
+      "user": "mindestorm"
+    },
+    "280": {
+      "user": "mindestorm"
+    },
+    "300": {
+      "user": "mindestorm"
+    },
+    "320": {
+      "user": "mindestorm"
+    },
+    "340": {
+      "user": "mindestorm"
+    },
+    "360": {
+      "user": "mindestorm"
+    },
+    "380": {
+      "user": "mindestorm"
+    },
+    "400": {
+      "user": "mindestorm"
+    },
+    "420": {
+      "user": "mindestorm"
+    },
+    "440": {
+      "user": "mindestorm"
+    },
+    "500": {
+      "user": "mindestorm"
+    },
+    "550": {
+      "user": "mindestorm"
+    },
+    "620": {
+      "user": "mindestorm"
+    },
+    "730": {
+      "user": "mindestorm"
+    },
+    "4000": {
+      "user": "mindestorm"
+    },
+    "11020": {
+      "user": "briggi123"
+    },
+    "109600": {
+      "user": "briggi123"
+    },
+    "203160": {
+      "user": "briggi123"
+    },
+    "205790": {
+      "user": "mindestorm"
+    },
+    "222880": {
+      "user": "mindestorm"
+    },
+    "223750": {
+      "user": "briggi123"
+    },
+    "225540": {
+      "user": "mindestorm"
+    },
+    "232910": {
+      "user": "briggi123"
+    },
+    "236390": {
+      "user": "mindestorm"
+    },
+    "238090": {
+      "user": "briggi123"
+    },
+    "239030": {
+      "user": "briggi123"
+    },
+    "241560": {
+      "user": "briggi123"
+    },
+    "243470": {
+      "user": "mindestorm"
+    },
+    "251570": {
+      "user": "mindestorm"
+    },
+    "252950": {
+      "user": "mindestorm"
+    },
+    "255710": {
+      "user": "briggi123"
+    },
+    "265930": {
+      "user": "briggi123"
+    },
+    "271590": {
+      "user": "bubbleegg2"
+    },
+    "285900": {
+      "user": "mindestorm"
+    },
+    "286570": {
+      "user": "mindestorm"
+    },
+    "291480": {
+      "user": "mindestorm"
+    },
+    "301520": {
+      "user": "mindestorm"
+    },
+    "304930": {
+      "user": "mindestorm"
+    },
+    "317400": {
+      "user": "mindestorm"
+    },
+    "322170": {
+      "user": "briggi123"
+    },
+    "346010": {
+      "user": "briggi123"
+    },
+    "346110": {
+      "user": "mindestorm"
+    },
+    "362890": {
+      "user": "mindestorm"
+    },
+    "367450": {
+      "user": "briggi123"
+    },
+    "386940": {
+      "user": "briggi123"
+    },
+    "391220": {
+      "user": "briggi123"
+    },
+    "407530": {
+      "user": "mindestorm"
+    },
+    "427250": {
+      "user": "mindestorm"
+    },
+    "427520": {
+      "user": "briggi123"
+    },
+    "431240": {
+      "user": "briggi123"
+    },
+    "431960": {
+      "user": "mindestorm"
+    },
+    "433530": {
+      "user": "briggi123"
+    },
+    "444090": {
+      "user": "briggi123"
+    },
+    "450390": {
+      "user": "mindestorm"
+    },
+    "460930": {
+      "user": "mindestorm"
+    },
+    "477160": {
+      "user": "mindestorm"
+    },
+    "485610": {
+      "user": "mindestorm"
+    },
+    "493340": {
+      "user": "briggi123"
+    },
+    "502500": {
+      "user": "briggi123"
+    },
+    "517630": {
+      "user": "mindestorm"
+    },
+    "554620": {
+      "user": "briggi123"
+    },
+    "557810": {
+      "user": "briggi123"
+    },
+    "578080": {
+      "user": "mindestorm"
+    },
+    "578330": {
+      "user": "briggi123"
+    },
+    "588430": {
+      "user": "mindestorm"
+    },
+    "596350": {
+      "user": "briggi123"
+    },
+    "607200": {
+      "user": "mindestorm"
+    },
+    "619910": {
+      "user": "mindestorm"
+    },
+    "643270": {
+      "user": "mindestorm"
+    },
+    "652980": {
+      "user": "mindestorm"
+    },
+    "703940": {
+      "user": "mindestorm"
+    },
+    "750920": {
+      "user": "briggi123"
+    },
+    "804320": {
+      "user": "briggi123"
+    },
+    "823130": {
+      "user": "mindestorm"
+    },
+    "834910": {
+      "user": "briggi123"
+    },
+    "1085660": {
+      "user": "mindestorm"
+    }
   }
 }

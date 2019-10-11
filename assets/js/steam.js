@@ -1,27 +1,61 @@
+var apps_cache = {};
 
-function getAppsById(cb, ids){
+function getAppsById(cb, ids, force = false){
+    var toRequest = [];
+    var inCache = [];
+    if(!force){
+        for(id of ids){
+            if(!(id in apps_cache)){
+                toRequest.push(id);
+            }else
+                inCache.push(id);
+        }
+    }else{
+        toRequest = ids;
+    }
+
+    if(toRequest.length == 0){
+        var result = [];
+        for(id of ids){
+            result.push(apps_cache[id]);
+        }
+        cb(result);
+        return;
+    }
+
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
             var result = JSON.parse(this.responseText);
+            for(app of result){
+                apps_cache[app.appId] = app;
+            }
+            for(id of inCache){
+                result.push(apps_cache[id]);
+            }
             cb(result);
         }
     };
-    for (let i = 0; i < ids.length; i++) {
-        ids[i] = "STEAM_"+ids[i];
+    for (let i = 0; i < toRequest.length; i++) {
+        toRequest[i] = "STEAM_"+toRequest[i];
         
     }
-    xmlhttp.open("GET", "http://192.168.2.100/ugl/index.php/getGames?uniqueID=" + ids.join(","), true);
+    xmlhttp.open("GET", "http://192.168.2.100/ugl/index.php/getGames?uniqueID=" + toRequest.join(","), true);
     xmlhttp.send();
 }
 
 function getAppsFromUser(cb, userId, onlyGames = true){
-    console.log(`loading games from user ${userId}`);
+    console.log(`[Steam] loading games from user ${userId}`);
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
+            if(this.responseText == "null"){
+                cb([]); 
+                console.log(`[Steam] loaded 0 games from user ${userId}! Is the profile private?`);
+                return;
+            }
             var result = JSON.parse(this.responseText);
-            console.log(result);
+            console.log(`[Steam] loaded ${result.length} games from user ${userId}`);
             cb(result);
         }
     };
@@ -36,7 +70,7 @@ async function openApp(appid, user = null){
     if(user!=null && cu != user){
         await changeUser(user, false);
     }
-    var executablePath = "\"D:\\Program Files (x86)\\Steam\\Steam.exe\" -applaunch "+appid;
+    var executablePath = "\""+await getSteamExe()+"\" -applaunch "+appid;
     const { exec } = require('child_process');
     exec(executablePath, (error, stdout, stderr) => {
         if (error) {
@@ -95,6 +129,44 @@ async function getLastUser(){
     return await p;
 }
 
+async function getSteamPath(){
+    var Registry = require('winreg')
+,   regKey = new Registry({
+      hive: Registry.HKCU,
+      key:  '\\Software\\Valve\\Steam'
+    })
+
+    let p = new Promise((res, rej) => {
+        regKey.values(function (err, items) {
+            for (var i=0; i<items.length; i++){
+                if(items[i].name == "SteamPath"){
+                    res(items[i].value);
+                }
+            }
+        });
+    });
+    return await p;
+}
+
+async function getSteamExe(){
+    var Registry = require('winreg')
+,   regKey = new Registry({
+      hive: Registry.HKCU,
+      key:  '\\Software\\Valve\\Steam'
+    })
+
+    let p = new Promise((res, rej) => {
+        regKey.values(function (err, items) {
+            for (var i=0; i<items.length; i++){
+                if(items[i].name == "SteamExe"){
+                    res(items[i].value);
+                }
+            }
+        });
+    });
+    return await p;
+}
+
 async function getCurrentUser(){
     var li = await isLoggedIn();
     console.log("[Steam] Logged in: "+li)
@@ -137,9 +209,9 @@ function closeSteam() {
     });
 }
 
-function openSteam() {
+async function openSteam() {
     console.log("[Steam] Starting steam");
-    var executablePath = "\"D:\\Program Files (x86)\\Steam\\Steam.exe\"";
+    var executablePath = '"'+await getSteamExe()+'"';
     const { exec } = require('child_process');
     exec(executablePath, (error, stdout, stderr) => {
         

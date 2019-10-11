@@ -17,7 +17,7 @@
             <li>
                 <div class="info-item">
                     <div class="info-title">Start with</div>
-                    <div class="info-value" id="info-user">BubbleEgg</div>
+                    <div class="info-value" id="info-user"></div>
                 </div>
             </li>
             <li>
@@ -47,20 +47,8 @@
         e.target.parentElement.remove();
     }
 
-    window.changeSteamUser = function (){
-        changeUser({
-            name: "SteamCTest01",
-            pass: "test1877"
-        });
-    }
-
     window.parseData = function(data){
         for(app of data){
-            if(typeof app_data[app.appId] === 'undefined'){
-                app_data[app.appId] = {};
-                app_data[app.appId]["user"] = "mindestorm";
-            }
-
             const div = document.createElement('div');
             const img = document.createElement('img');
             const name = document.createElement('div');
@@ -80,7 +68,7 @@
     }
 
     window.startCurrentGame = function() {
-        openApp(currentGame.appId, app_data[currentGame.appId].user);
+        openApp(currentGame.appId, app_data["apps"][currentGame.appId].user);
     }
 
     function sortData(data){
@@ -109,19 +97,46 @@
         getAppsById(function(app) {
             name.innerText = app[0].displayName;
             currentGame = app[0];
-            document.querySelector("#info-user").innerText = app_data[appId].user;
+            if(isDefined(app_data["apps"][appId].user))
+                document.querySelector("#info-user").innerText = app_data["apps"][appId].user;
             document.querySelector("#info-dev").innerText = app[0].developer;
         }, [appId])
     }
 
     window.loadDataUser = function(first = false){
-        getAppsFromUser(function(data){
-            data = sortData(data);
-            parseData(data);
-            if(first&&data[0].appId!=null){
-                window.setCurrentGame(data[0].appId);
+        users = app_getUsers();
+        var all_data = [];
+        var appIds = [];
+        var reqDone = 0;
+        for(user of users){
+            getAppsFromUser(function(data){
+                for(app of data){
+                    if(appIds.includes(app.appId)){
+                        continue;
+                    }
+                    appIds.push(app.appId);
+
+                    app["user"] = user.name;
+
+                    if(!isDefined(app_data["apps"]))
+                        app_data["apps"] = {};
+                    if(!isDefined(app_data["apps"][app.appId]))
+                        app_data["apps"][app.appId] = {};
+                    if(!isDefined(app_data["apps"][app.appId]["user"]))
+                        app_data["apps"][app.appId]["user"] = user.name;
+                    all_data.push(app);
+                }
+                reqDone++;
+                if(reqDone==users.length){
+                    all_data = sortData(all_data);
+
+                    parseData(all_data);
+                    if(first&&all_data[0].appId!=null){
+                        window.setCurrentGame(all_data[0].appId);
+                }
             }
-        }, "76561198242115578"); //76561198242115578 // 76561198085862571
+            }, user.steam64id); //76561198242115578 // 76561198085862571
+        }
     }
 
     app_loadData();
