@@ -63,6 +63,10 @@ function getAppsFromUser(cb, userId, onlyGames = true){
     xmlhttp.send();
 }
 
+function getAppIdsFromCache(){
+    return Object.keys(app_data["apps"]);
+}
+
 async function openApp(appid, user = null){
     console.log("[Steam] Opening app "+appid+" with user '"+user+"'");
     var cu = await getCurrentUser();
@@ -182,7 +186,7 @@ async function changeUser(name, openSteam = true){
     var running = await isRunning();
     if(running){
         closeSteam();
-        await timeout(1000);
+        await timeout(1500);
     }
     var Registry = require('winreg')
     ,   regKey = new Registry({
@@ -192,7 +196,7 @@ async function changeUser(name, openSteam = true){
     let p = new Promise((res, rej) => {
         regKey.set('AutoLoginUser', Registry.REG_SZ, name, function() {
             if(openSteam){
-                openSteam();
+                this.openSteam();
             }
             res();
         });
@@ -216,6 +220,28 @@ async function openSteam() {
     exec(executablePath, (error, stdout, stderr) => {
         
     });
+}
+
+async function getSteamUserInfo(steamId){
+    let p = new Promise((res, rej) => {
+        var xmlhttp = new XMLHttpRequest();
+        xmlhttp.onreadystatechange = function () {
+            console.log("done");
+            //console.log(this.responseText);
+            if (this.readyState == 4 && this.status == 200) {
+                if(this.responseText == "null"){
+                    res();
+                    return;
+                }
+                var parser = new DOMParser();
+                var xml = parser.parseFromString(this.responseText,"text/xml");
+                res(xml);
+            }
+        };
+        xmlhttp.open("GET", "https://steamcommunity.com/profiles/"+steamId+"?xml=1", true);
+        xmlhttp.send();
+    });
+    return await p;;
 }
 
 async function timeout(time){

@@ -25,7 +25,8 @@ div {
   margin: 0px;
   width: 100%;
   background-color: transparent;
-  padding-bottom: 0px; }
+  padding-bottom: 0px;
+  overflow: hidden; }
 
 #head {
   position: fixed;
@@ -46,7 +47,7 @@ div {
 
 #navbar li {
   float: left;
-  margin-right: 35px;
+  margin-right: 25px;
   text-transform: uppercase; }
 
 .navbar-header {
@@ -54,17 +55,18 @@ div {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   font-size: 20px;
   text-shadow: 0px 0px 9px #000000, 0px 0px 9px #000000;
-  transition: color 0.2s ease-in-out; }
+  transition: color 0.2s ease-in-out;
+  width: calc(auto + 10px); }
 
-.navbar-header:hover {
-  color: #fff; }
-
-.navbar-games-active {
+.navbar-header.active {
   color: #fff;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   font-size: 20px;
   font-weight: bold;
   text-shadow: 0px 0px 9px #000000, 0px 0px 9px #000000; }
+
+.navbar-header:hover {
+  color: #fff; }
 
 #content {
   width: 100%;
@@ -215,35 +217,230 @@ div {
 .launch-btn:hover {
   background-position-x: -210px; }
 
+#user-list-c {
+  position: relative;
+  padding-top: 120px;
+  width: 100%;
+  height: 280px;
+  background: url("https://steamstore-a.akamaihd.net/public/images/v6/colored_body_top2.png?v=2");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  overflow-x: scroll;
+  overflow-y: hidden; }
+  #user-list-c #user-list {
+    margin: 0;
+    margin-left: 10px;
+    position: relative;
+    white-space: nowrap;
+    text-align: center; }
+  #user-list-c li {
+    display: inline-block;
+    position: relative;
+    margin-right: 15px; }
+  #user-list-c .user {
+    width: 250px;
+    height: 150px;
+    position: relative;
+    overflow: hidden;
+    float: none; }
+    #user-list-c .user .user-back {
+      background: url("https://steamcdn-a.akamaihd.net/steamcommunity/public/images/avatars/47/476f16d1a2188f6dee5ac57a20fc2b6004ed1449_full.jpg");
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: cover;
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      right: 0;
+      left: 0; }
+    #user-list-c .user .user-back::after {
+      content: '';
+      background: rgba(0, 0, 0, 0.4);
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      right: 0;
+      left: 0; }
+    #user-list-c .user .user-name {
+      transition: bottom .15s ease-in-out;
+      position: absolute;
+      bottom: -20%;
+      background: #00000090;
+      height: 60%;
+      text-align: start;
+      width: 100%;
+      padding-left: 5%; }
+    #user-list-c .user .user-name.active {
+      background: #004ad38c; }
+    #user-list-c .user .user-btns {
+      position: absolute;
+      bottom: 10%;
+      width: 100%;
+      opacity: 0;
+      transition: opacity .3s ease;
+      display: grid;
+      grid-row: 1;
+      grid-template-columns: repeat(auto-fit, minmax(50%, 1fr)); }
+      #user-list-c .user .user-btns .user-switch {
+        height: 30px;
+        width: 90%;
+        margin-left: 5%;
+        background: linear-gradient(to right, #0064b1 0%, #0fdbff 200%);
+        background-size: 250px;
+        font-size: 19px;
+        text-align: center;
+        color: #FFF;
+        cursor: pointer; }
+  #user-list-c .user:hover .user-name {
+    bottom: 0%; }
+  #user-list-c .user:hover .user-btns {
+    opacity: 1; }
+
+.code-area {
+  width: 300px;
+  height: calc(100vh - 280px);
+  background: #1a1a1a; }
+  .code-area .code-container {
+    width: 100%;
+    height: 150px;
+    background: #161616;
+    position: relative; }
+  .code-area #current-code {
+    width: 100%;
+    height: 100%;
+    line-height: 150px;
+    text-align: center;
+    font-size: 32px; }
+  .code-area #code-time {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 5px;
+    background: #006faf;
+    transition: all 1s linear; }
+  .code-area input {
+    color: #FFF; }
+
+.trades-container {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow-y: scroll; }
+  .trades-container #trades {
+    width: calc(100% - 50px);
+    margin: 25px 25px 25px 25px;
+    height: calc(100% - 50px); }
+    .trades-container #trades li {
+      margin-bottom: 10px; }
+  .trades-container .trade {
+    display: block;
+    position: relative;
+    background: linear-gradient(45deg, #1a5c83 0%, #2b2b2b 100%);
+    width: 100%;
+    height: 75px;
+    float: none;
+    overflow: hidden; }
+    .trades-container .trade img {
+      width: 75px;
+      height: 75px;
+      background: #00000050;
+      float: left; }
+    .trades-container .trade .t-details {
+      position: absolute;
+      left: 78px; }
+      .trades-container .trade .t-details .t-name {
+        margin: 5px 0 0 5px;
+        font-size: 20px;
+        line-height: 20px;
+        float: none;
+        white-space: nowrap; }
+      .trades-container .trade .t-details .t-price {
+        color: #8f8f8f;
+        margin: 7px 0 0 5px;
+        font-size: 15px;
+        line-height: 15px;
+        float: none; }
+      .trades-container .trade .t-details .t-date {
+        color: #8f8f8f;
+        margin: 5px 0 0 5px;
+        font-size: 15px;
+        line-height: 15px; }
+    .trades-container .trade .t-options {
+      position: absolute;
+      right: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 75px; }
+      .trades-container .trade .t-options div {
+        font-size: 20px;
+        line-height: 20px; }
+      .trades-container .trade .t-options .t-accept {
+        color: #006faf;
+        font-weight: bold;
+        margin-right: 20px; }
+
+.notrades {
+  position: absolute;
+  display: grid;
+  text-align: center;
+  row-gap: 10px; }
+  .notrades i {
+    color: #006faf; }
+  .notrades #secret {
+    color: #FFF;
+    font-size: 40px;
+    line-height: 40px;
+    padding-bottom: 7px;
+    width: 340px; }
+  .notrades #secret:focus {
+    border-bottom: 1px solid #006faf;
+    box-shadow: 0 1px 0 0 #006faf;
+    text-align: center; }
+
+.steam-bottom {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  width: 100%;
+  height: calc(100vh - 280px); }
+
 #users {
-  margin: 100px 0 20px 20px;
+  width: 100%;
+  height: 100vh;
   color: #d2d2d2;
   font-size: 25px; }
 
-.u-display {
-  margin: 0 20px 20px 0;
-  height: 100px;
-  background: var(--main-bg-light);
-  float: left;
-  position: relative;
-  width: 200px; }
-
-.u-name {
-  margin: 10px; }
-
-.u-btn-switch {
+.side-types {
   position: absolute;
-  bottom: 10px;
-  left: 10px;
-  right: 10px;
-  background: var(--main-primary);
-  text-align: center;
-  font-size: 15px;
-  font-weight: bold;
-  color: #fff;
-  height: 30px;
-  line-height: 30px;
-  cursor: pointer; }
+  width: 75px;
+  background: #111111;
+  margin: 0;
+  top: 0;
+  bottom: 0; }
+  .side-types .types {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    margin: 0;
+    text-align: center; }
+  .side-types li {
+    display: inline-block;
+    width: 100%;
+    height: 50px;
+    margin-top: 10px; }
+  .side-types img {
+    margin: 0 auto;
+    width: 50px;
+    height: 50px; }
+
+#user-content {
+  position: absolute;
+  left: 75px;
+  top: 0;
+  right: 0;
+  bottom: 0; }
 
 .col-1 {
   width: 8.33%; }

@@ -1,0 +1,232 @@
+<div id="user-list-c">
+    <ul id="user-list">
+    </ul>
+</div>
+<div class="steam-bottom">
+    <div class="code-area">
+        <div class="code-container">
+            <div id="code-time"></div>
+            <div id="current-code">CODE</div>
+        </div>
+    </div>
+    <div class="trades-container">
+        <ul id="trades">
+        </ul>
+        <div id="tm-nta" class="notrades" style="display: none;">
+            <i class="fas fa-check"></i>
+            <div class="notrades-text">Nothing to accept</div>
+        </div>
+        <div id="tm-pw" class="notrades">
+            <i class="fas fa-lock"></i>
+            <div class="notrades-text">Enter password to show trades</div>
+            <input id="secret" type="password">
+        </div>
+    </div>
+</div>
+
+<script>
+    window.steamOffset = 0;
+
+    async function addTrade(trade){
+        console.log("Adding trade: "+trade.id);
+
+        const e_li = document.createElement('li');
+        const e_trade = document.createElement('div');
+        const e_img = document.createElement('img');
+        const e_details = document.createElement('div');
+        const e_name = document.createElement('div');
+        const e_price = document.createElement('div');
+        const e_date = document.createElement('div');
+        const e_options = document.createElement('div');
+        const e_accept = document.createElement('div');
+        const e_deny = document.createElement('div');
+
+        e_trade.className = "trade";
+        e_img.src = trade.image;
+        e_details.className = "t-details";
+        e_name.className = "t-name";
+        e_name.innerText = stripHtml(trade.details);
+        e_price.className = "t-price";
+        e_price.innerText = trade.traded;
+        e_date.className = "t-date";
+        e_date.innerText = trade.when;
+        e_options.className = "t-options";
+        e_accept.className = "t-accept";
+        e_accept.innerText = "Accept";
+        e_deny.className = "t-deny";
+        e_deny.innerText = "Deny";
+
+        e_options.appendChild(e_accept);
+        e_options.appendChild(e_deny);
+        e_details.appendChild(e_name);
+        e_details.appendChild(e_price);
+        e_details.appendChild(e_date);
+        e_trade.appendChild(e_img);
+        e_trade.appendChild(e_options);
+        e_trade.appendChild(e_details);
+        e_li.appendChild(e_trade);
+        document.getElementById("trades").appendChild(e_li);
+    }
+
+    function stripHtml(html)
+    {
+        var tmp = document.createElement("DIV");
+        tmp.innerHTML = html;
+        return tmp.textContent || tmp.innerText || "";
+    }
+
+    function loadCode(){
+        var user = app_getUsers()[0];
+
+        if(!window.steamSecret){
+            var secret = document.getElementById("secret").value;
+            window.steamSecret = secret;
+        }
+        SteamAuth.Sync(function(err){
+            var auth = new SteamAuth({
+                deviceid: decrypt(user.auth.deviceid, window.steamSecret),
+                shared_secret: decrypt(user.auth.shared_secret, window.steamSecret),
+                identity_secret: decrypt(user.auth.identity_secret, window.steamSecret),
+            });
+            auth.on("ready", function() {
+                document.getElementById("current-code").innerText = auth.calculateCode();
+
+                window.steamOffset = SteamAuth.Offset;
+
+                updateCode(auth);
+                setTimeout(function() {
+
+                    if(window.codeRefresh)
+                        clearInterval(window.codeRefresh);
+                    window.codeRefresh = setInterval(function(){
+                        if(getRemainingTime()==30)
+                            updateCode(auth);
+                        var codeTime = document.getElementById("code-time");
+                        if(codeTime!=null)
+                            codeTime.style.transform = "scaleX("+getRemainingTime()/30+")";
+                    }, 1000);
+                }, getRemainingTime());
+
+                auth.login({
+                    username: user.name,
+	                password: decrypt(user.auth.password, window.steamSecret)
+                }, function(err, session) {
+                    if(err){
+                        console.log(err);
+                    }
+                    console.log("logged in");
+
+                    var nta = document.getElementById("tm-nta");
+                    auth.getTradeConfirmations(function(err, trades)
+                    {
+                        if (err) return;
+                        if(trades.length == 0){
+                            nta.style.display = "grid";
+                        }else{
+                            nta.style.display = "none";
+                        }
+                        for (const trade of trades) {
+                            console.log(trade);
+                            addTrade(trade);
+                        }
+                    });
+                });
+            });
+
+            var pw = document.getElementById("tm-pw");
+            pw.style.display = "none";
+        });
+    }
+
+    function getRemainingTime(){
+        return 30 - ((((new Date().getTime() + window.steamOffset) % 30000) / 1000) | 0);
+    }
+
+    function updateCode(auth){
+        var code = document.getElementById("current-code");
+        if(code!=null)
+            code.innerText = auth.calculateCode();
+        else
+            clearInterval(window.codeRefresh);
+    }
+
+    window.submitSecret = function(){
+        loadCode();
+    }
+
+    function loadUsers(){
+        console.log("Loading users");
+        var users = app_getUsers();
+        console.log(users.length);
+        users.forEach(user => {
+            addUser(user);
+        });
+    }
+
+    async function addUser(user){
+        console.log("Adding user: "+user.name);
+
+        const e_li = document.createElement('li');
+        const e_user = document.createElement('div');
+        const e_back = document.createElement('div');
+        const e_name = document.createElement('div');
+        const e_btns = document.createElement('div');
+        const e_switch = document.createElement('div');
+
+        var ui = await getSteamUserInfo(user.steam64id);
+
+        e_user.className = "user";
+        e_back.className = "user-back";
+        e_back.style.backgroundImage = 'url("'+ui.getElementsByTagName("avatarFull")[0].childNodes[0].nodeValue+'")';
+        e_name.className = "user-name";
+        e_name.innerText = ui.getElementsByTagName("steamID")[0].childNodes[0].nodeValue;
+        e_btns.className = "user-btns";
+        e_switch.className = "user-switch";
+        e_switch.innerText = "SWITCH";
+        e_switch.setAttribute("onClick", "changeUser('"+user.name+"')");
+
+        e_btns.appendChild(e_switch);
+        e_user.appendChild(e_back);
+        e_user.appendChild(e_name);
+        e_user.appendChild(e_btns);
+        e_li.appendChild(e_user);
+        document.getElementById("user-list").appendChild(e_li);
+    }
+
+    loadUsers();
+
+    console.log("secret: "+window.steamSecret);
+    if (!window.steamSecret){
+        window.steamSecret = "";
+        document.getElementById("secret").addEventListener("keyup", function(){
+            if (event.keyCode === 13) {
+                event.preventDefault();
+                loadCode();
+            }
+        });
+    }else{
+        console.log("fromCache");
+        loadCode();
+        var pw = document.getElementById("tm-pw");
+        pw.style.display = "none";
+    }
+
+    var item = document.getElementById('user-list-c');
+    window.addEventListener('wheel', function(e) {
+        if(document.querySelectorAll("#user-list-c:hover").length==0)
+            return;
+        var speed = 40;
+        if (e.deltaY > 0){
+            item.scrollLeft += speed/2;
+            setTimeout(function(){
+                item.scrollLeft += speed/2;
+            }, 5);
+            
+        }else{
+            item.scrollLeft -= speed/2;
+            setTimeout(function(){
+                item.scrollLeft -= speed/2;
+            }, 5);
+        }
+    });
+</script>

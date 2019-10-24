@@ -47,7 +47,9 @@
         e.target.parentElement.remove();
     }
 
-    window.parseData = function(data){
+    window.parseData = function(data, clear = false){
+        if(clear)
+            games.innerHTML = "";
         for(app of data){
             const div = document.createElement('div');
             const img = document.createElement('img');
@@ -104,6 +106,20 @@
     }
 
     window.loadDataUser = function(first = false){
+        var appsInCache = getAppIdsFromCache();
+        console.log("Loading "+appsInCache.length+" games");
+        getAppsById(function(apps) {
+            console.log("Game data received");
+            apps = sortData(apps);
+            console.log("Game data sorted");
+            parseData(apps);
+            console.log("Game data parsed");
+            window.setCurrentGame(apps[0].appId);
+            loadDataFromUsers(first);
+        }, appsInCache);
+    }
+
+    window.loadDataFromUsers = function(first = false){
         users = app_getUsers();
         var all_data = [];
         var appIds = [];
@@ -128,18 +144,18 @@
                 }
                 reqDone++;
                 if(reqDone==users.length){
+                    if(getAppIdsFromCache().length == all_data.length || all_data.length == 0)
+                        return;
                     all_data = sortData(all_data);
 
-                    parseData(all_data);
-                    if(first&&all_data[0].appId!=null){
+                    parseData(all_data, true);
+                    if(first&&all_data[0].appId!=null&&appsInCache.length==0){
                         window.setCurrentGame(all_data[0].appId);
                 }
             }
             }, user.steam64id); //76561198242115578 // 76561198085862571
         }
     }
-
-    app_loadData();
 
     window.loadDataUser(true);
 

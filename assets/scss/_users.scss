@@ -1,33 +1,46 @@
+@import "_type-steam";
+
 #users{
-    margin: 100px 0 20px 20px;
+    width: 100%;
+    height: 100vh;
     color: #d2d2d2;
     font-size: 25px;
 }
 
-.u-display {
-    margin: 0 20px 20px 0;
-    height: 100px;
-    background: var(--main-bg-light);
-    float: left;
-    position: relative;
-    width: 200px;
-}
-
-.u-name {
-    margin: 10px;
-}
-
-.u-btn-switch {
+.side-types {
     position: absolute;
-    bottom: 10px;
-    left: 10px;
-    right: 10px;
-    background: var(--main-primary);
-    text-align: center;
-    font-size: 15px;
-    font-weight: bold;
-    color: #fff;
-    height: 30px;
-    line-height: 30px;
-    cursor: pointer;
+    width: 75px;
+    background: #111111;
+    margin: 0;
+    top: 0;
+    bottom: 0;
+
+    .types {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        margin: 0;
+        text-align: center;
+    }
+
+    li {
+        display: inline-block;
+        width: 100%;
+        height: 50px;
+        margin-top: 10px;
+    }
+
+    img {
+        margin: 0 auto;
+        width: 50px;
+        height: 50px;
+    }
+}
+
+#user-content {
+    position: absolute;
+    left: 75px;
+    top: 0;
+    right: 0;
+    bottom: 0;
 }

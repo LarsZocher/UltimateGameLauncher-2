@@ -16,7 +16,8 @@ app.on('ready', function () {
         },
         width: 1100,
         height: 600,
-        frame: false
+        frame: false,
+        backgroundColor: '#111111'
     });
     console.log(__dirname);
     //Load html

@@ -1,0 +1,40 @@
+{
+  "name": "steamauth",
+  "version": "0.1.5",
+  "description": "SteamGuard code generator and trade confirmations",
+  "author": "Colin Mackie <winauth@gmail.com>",
+  "main": "index.js",
+  "dependencies": {
+    "underscore": "^1.8.3",
+    "rfc-3548-b32": "^0.0.2",
+    "request": "^2.67.0",
+    "async": "^1.5.0",
+    "node-rsa": "^0.2.26",
+    "cheerio": "^0.19.0",
+    "bunyan": "^1.5.1"
+  },
+  "devDependencies": {
+    "mocha": "latest",
+    "should": "latest",
+    "nock": "latest",
+    "jshint": "latest",
+    "uglify-js": "latest",
+    "rimraf": "latest"
+  },
+  "scripts": {
+    "lint": "jshint **.js || true",
+    "wint": "for %f in (*.js) do jshint %f",
+    "uglify": "uglifyjs index.js -mt -o dist/steamauth.min.js",
+    "test": "node_modules/.bin/mocha",
+    "clean": "rimraf dist",
+    "build": "npm run clean && npm run wint && mkdir dist && npm run uglify"
+  },
+  "keywords": [
+    "WinAuth",
+    "SteamGuard",
+    "Steam",
+    "Trading",
+    "Confirmations"
+  ],
+  "license": "GPLv3"
+}

@@ -20,9 +20,9 @@ $breakpointPC: 1200px;
     @media (min-width: $width) { @content ; }
 }
 
-@import "_main.scss";
-@import "_games.scss";
-@import "_users.scss";
+@import '_main.scss';
+@import '_games.scss';
+@import '_users.scss';
 
 
 //Grid view

@@ -2,3 +2,4 @@ node_modules/
 release-builds/
 package-lock.json
 public/assets/css/app.css
+app_data.json

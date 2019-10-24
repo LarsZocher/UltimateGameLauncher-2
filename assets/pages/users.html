@@ -1,47 +1,23 @@
 <div id="users">
-    <div class="u-display">
-        <div class="u-name">mindestorm</div>
-        <div class="u-btn-switch" onclick="window.changeUserNew('mindestorm')">Wechseln</div>
-    </div>
-    <div class="u-display">
-        <div class="u-name">bubbleegg2</div>
-        <div class="u-btn-switch" onclick="window.changeUserNew('bubbleegg2')">Wechseln</div>
+    <aside class="side-types">
+        <ul class="types">
+            <li>
+                <img src="../icons/types/steam.png" alt="" onclick="window.users_loadPage('steam.html')">
+            </li>
+            <li>
+                <img src="../icons/types/battlenet.png" alt="" onclick="window.users_loadPage('steam.html')">
+            </li>
+        </ul>
+    </aside>
+    <div id="user-content">
+        
     </div>
 </div>
 
 <script>
-    window.changeUserNew = async function(name, appId = null){
-        var running = await isRunning();
-        if(running){
-            window.closeSteam();
-            await timeout(2000);
-        }
-        var Registry = require('winreg')
-        ,   regKey = new Registry({
-            hive: Registry.HKCU,
-            key:  '\\Software\\Valve\\Steam'
-        });
-        regKey.set('AutoLoginUser', Registry.REG_SZ, name, function() {
-            if(appId!=null)
-                openApp(appId);
-            else
-                window.openSteam();
-        });
+    window.users_loadPage = function(page){
+        loadPageContent('userTypes/'+page, document.getElementById('user-content'));
     }
 
-    window.closeSteam = function (){
-        var executablePath = "\"D:\\Program Files (x86)\\Steam\\Steam.exe\" -shutdown";
-        const { exec } = require('child_process');
-        exec(executablePath, (error, stdout, stderr) => {
-            
-        });
-    }
-
-    window.openSteam = function (){
-        var executablePath = "\"D:\\Program Files (x86)\\Steam\\Steam.exe\"";
-        const { exec } = require('child_process');
-        exec(executablePath, (error, stdout, stderr) => {
-            
-        });
-    }
+    window.users_loadPage("steam.html");
 </script>
