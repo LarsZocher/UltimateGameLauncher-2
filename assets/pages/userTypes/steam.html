@@ -16,6 +16,16 @@
             <i class="fas fa-check"></i>
             <div class="notrades-text">Nothing to accept</div>
         </div>
+        <div id="tm-error" class="notrades" style="display: none;">
+            <i class="fas fa-exclamation-triangle"></i>
+            <div class="notrades-text">Oops! Something went wrong</div>
+            <div id="tm-error-value" class="notrades-sub-text"></div>
+        </div>
+        <div id="tm-captcha" class="notrades" style="display: none;">
+            <img id="captcha-img" src="">
+            <div class="notrades-text">Captcha required!</div>
+            <input id="captcha" type="text">
+        </div>
         <div id="tm-pw" class="notrades">
             <i class="fas fa-lock"></i>
             <div class="notrades-text">Enter password to show trades</div>
@@ -26,9 +36,11 @@
 
 <script>
     window.steamOffset = 0;
+    window.steam2FA = false;
+    window.steamUser = app_getUsers()[0];
 
     async function addTrade(trade){
-        console.log("Adding trade: "+trade.id);
+        console.log("[SteamType] Adding trade: "+trade.id);
 
         const e_li = document.createElement('li');
         const e_trade = document.createElement('div');
@@ -76,18 +88,17 @@
     }
 
     function loadCode(){
-        var user = app_getUsers()[0];
-
         if(!window.steamSecret){
             var secret = document.getElementById("secret").value;
             window.steamSecret = secret;
         }
         SteamAuth.Sync(function(err){
             var auth = new SteamAuth({
-                deviceid: decrypt(user.auth.deviceid, window.steamSecret),
-                shared_secret: decrypt(user.auth.shared_secret, window.steamSecret),
-                identity_secret: decrypt(user.auth.identity_secret, window.steamSecret),
+                deviceid: decrypt(window.steamUser.auth.deviceid, window.steamSecret),
+                shared_secret: decrypt(window.steamUser.auth.shared_secret, window.steamSecret),
+                identity_secret: decrypt(window.steamUser.auth.identity_secret, window.steamSecret),
             });
+            window.steamAuth = auth;
             auth.on("ready", function() {
                 document.getElementById("current-code").innerText = auth.calculateCode();
 
@@ -107,34 +118,91 @@
                     }, 1000);
                 }, getRemainingTime());
 
-                auth.login({
-                    username: user.name,
-	                password: decrypt(user.auth.password, window.steamSecret)
-                }, function(err, session) {
-                    if(err){
-                        console.log(err);
-                    }
-                    console.log("logged in");
+                var loadTrades = checkTradeCache();
 
-                    var nta = document.getElementById("tm-nta");
-                    auth.getTradeConfirmations(function(err, trades)
-                    {
-                        if (err) return;
-                        if(trades.length == 0){
-                            nta.style.display = "grid";
-                        }else{
-                            nta.style.display = "none";
-                        }
-                        for (const trade of trades) {
-                            console.log(trade);
-                            addTrade(trade);
-                        }
+                if(loadTrades){
+                    logIn(auth, {
+                        username: window.steamUser.name,
+                        password: decrypt(window.steamUser.auth.password, window.steamSecret)
                     });
-                });
+                }
             });
 
             var pw = document.getElementById("tm-pw");
             pw.style.display = "none";
+        });
+    }
+
+    function checkTradeCache(){
+        if(window.tradeCache){
+            if(window.tradeCache == 0){
+                document.getElementById("tm-nta").style.display = "grid";
+            }else{
+                for (const trade of window.tradeCache) {
+                    console.log("[SteamAuth] Adding trade from cache: "+trade.id);
+                    addTrade(trade);
+                }
+            }
+            return false;
+        }else{
+            return true;
+        }
+    }
+
+    function logIn(auth, options){
+        auth.login(options, function(err, session) {
+            if(!err){
+                window.steam2FA = false;
+                console.log("[SteamAuth] Logged in!");
+                loadTrades(auth);
+            }else{
+                console.log(err);
+
+                if(err.captchaid){
+                    document.getElementById("captcha-img").src = err.captchaurl;
+                    document.getElementById("tm-captcha").style.display = "grid";
+                    window.steamCaptchaId = err.captchaid;
+                    return;
+                }
+                if(err.message == "Need 2FA" && !window.steam2FA){
+                    window.steam2FA = true;
+                    logIn(auth, {
+                        username: window.steamUser.name,
+                        password: decrypt(window.steamUser.auth.password, window.steamSecret),
+                        twofactorcode: auth.calculateCode()
+                    });
+                    return;
+                }
+
+                document.getElementById("tm-error-value").innerText = err.message;
+                document.getElementById("tm-error").style.display = "grid";
+                return;
+            }
+        });
+    }
+
+    function loadTrades(auth){
+        var nta = document.getElementById("tm-nta");
+        auth.getTradeConfirmations(function(err, trades)
+        {
+            if(err){
+                console.log(err);
+                document.getElementById("tm-error-value").innerText = err.message;
+                document.getElementById("tm-error").style.display = "grid";
+                return;
+            }
+            if(trades.length == 0){
+                window.tradeCache = 0;
+                nta.style.display = "grid";
+                return;
+            }else{
+                window.tradeCache = trades;
+                nta.style.display = "none";
+            }
+            for (const trade of trades) {
+                console.log(trade);
+                addTrade(trade);
+            }
         });
     }
 
@@ -202,6 +270,17 @@
             if (event.keyCode === 13) {
                 event.preventDefault();
                 loadCode();
+            }
+        });
+        document.getElementById("captcha").addEventListener("keyup", function(){
+            if (event.keyCode === 13) {
+                event.preventDefault();
+                logIn(window.steamAuth, {
+                    username: window.steamUser.name,
+                    password: decrypt(user.auth.password, window.steamSecret),
+                    captchid: window.steamCaptchaId,
+	                captchatext: document.getElementById("captcha").value
+                });
             }
         });
     }else{

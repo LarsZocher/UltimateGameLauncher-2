@@ -389,6 +389,9 @@ div {
   row-gap: 10px; }
   .notrades i {
     color: #006faf; }
+  .notrades .notrades-sub-text {
+    font-size: 18px;
+    color: #999999; }
   .notrades #secret {
     color: #FFF;
     font-size: 40px;
@@ -396,6 +399,15 @@ div {
     padding-bottom: 7px;
     width: 340px; }
   .notrades #secret:focus {
+    border-bottom: 1px solid #006faf;
+    box-shadow: 0 1px 0 0 #006faf;
+    text-align: center; }
+  .notrades #captcha {
+    color: #FFF;
+    font-size: 40px;
+    line-height: 40px;
+    padding-bottom: 7px; }
+  .notrades #captcha:focus {
     border-bottom: 1px solid #006faf;
     box-shadow: 0 1px 0 0 #006faf;
     text-align: center; }

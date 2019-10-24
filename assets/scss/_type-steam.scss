@@ -226,6 +226,11 @@
         color: rgb(0, 111, 175);
     }
 
+    .notrades-sub-text {
+        font-size: 18px;
+        color: rgb(153, 153, 153);
+    }
+
     #secret {
         color: #FFF;
         font-size: 40px;
@@ -240,6 +245,22 @@
         box-shadow: 0 1px 0 0 #006faf;
         text-align: center;
     }
+
+    #captcha {
+        color: #FFF;
+        font-size: 40px;
+        line-height: 40px;
+        padding-bottom: 7px;
+        //width: 340px;
+       // border-color: #0064b1;
+    }
+
+    #captcha:focus{
+        border-bottom: 1px solid #006faf;
+        box-shadow: 0 1px 0 0 #006faf;
+        text-align: center;
+    }
+
 }
 
 
