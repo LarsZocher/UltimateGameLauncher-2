@@ -41,6 +41,7 @@
             bottom: 0;
             right: 0;
             left: 0;
+            transition: transform .3s linear;
         }
         .user-back::after {
             content: '';
@@ -50,10 +51,11 @@
             bottom: 0;
             right: 0;
             left: 0;
+            transition: background .3s linear;
         }
 
         .user-name{
-            transition: bottom .15s ease-in-out;
+            transition: bottom .15s ease-in-out, background .3s linear;
             position: absolute;
             bottom: -20%;
             background: #00000090;
@@ -61,10 +63,6 @@
             text-align: start;
             width: 100%;
             padding-left: 5%;
-        }
-
-        .user-name.active{
-            background: #004ad38c
         }
 
         .user-btns {
@@ -92,12 +90,28 @@
     }
 
     .user:hover {
-        .user-name{
+        .user-name {
             bottom: 0%;
         }
 
-        .user-btns{
+        .user-btns {
             opacity: 1;
+        }
+    }
+
+    .user.active {
+
+        .user-name {
+            background: #00405e98;
+            color: #FFF;
+        }
+
+        .user-back{
+            transform: scale(1.05);
+        }
+
+        .user-back::after {
+            background: rgba(0, 0, 0, 0.1);
         }
     }
 }
@@ -120,6 +134,14 @@
         line-height: 150px;
         text-align: center;
         font-size: 32px;
+        font-weight: bold;
+    }
+
+    #current-user {
+        position: absolute;
+        left: 25px;
+        top: 20px;
+        font-size: 20px;
     }
 
     #code-time {
@@ -237,13 +259,13 @@
         line-height: 40px;
         padding-bottom: 7px;
         width: 340px;
+        text-align: center;
        // border-color: #0064b1;
     }
 
     #secret:focus{
         border-bottom: 1px solid #006faf;
         box-shadow: 0 1px 0 0 #006faf;
-        text-align: center;
     }
 
     #captcha {
@@ -251,6 +273,7 @@
         font-size: 40px;
         line-height: 40px;
         padding-bottom: 7px;
+        text-align: center;
         //width: 340px;
        // border-color: #0064b1;
     }
@@ -258,7 +281,6 @@
     #captcha:focus{
         border-bottom: 1px solid #006faf;
         box-shadow: 0 1px 0 0 #006faf;
-        text-align: center;
     }
 
 }

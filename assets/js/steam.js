@@ -222,11 +222,16 @@ async function openSteam() {
     });
 }
 
+var user_cache = {};
+
 async function getSteamUserInfo(steamId){
+    if(user_cache[steamId]){
+        console.log("user from cache");
+        return user_cache[steamId];
+    }
     let p = new Promise((res, rej) => {
         var xmlhttp = new XMLHttpRequest();
         xmlhttp.onreadystatechange = function () {
-            console.log("done");
             //console.log(this.responseText);
             if (this.readyState == 4 && this.status == 200) {
                 if(this.responseText == "null"){
@@ -235,13 +240,14 @@ async function getSteamUserInfo(steamId){
                 }
                 var parser = new DOMParser();
                 var xml = parser.parseFromString(this.responseText,"text/xml");
+                user_cache[steamId] = xml;
                 res(xml);
             }
         };
         xmlhttp.open("GET", "https://steamcommunity.com/profiles/"+steamId+"?xml=1", true);
         xmlhttp.send();
     });
-    return await p;;
+    return await p;
 }
 
 async function timeout(time){

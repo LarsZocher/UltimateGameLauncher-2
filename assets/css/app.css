@@ -37,7 +37,8 @@ div {
   height: 35px;
   background: transparent;
   width: 100%;
-  -webkit-app-region: drag; }
+  -webkit-app-region: drag;
+  position: relative; }
 
 #navbar {
   list-style-type: none;
@@ -77,6 +78,51 @@ div {
   right: 0;
   bottom: 0;
   top: 0; }
+
+#window-controls {
+  display: grid;
+  grid-template-columns: repeat(3, 46px);
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 30px;
+  font-family: "Segoe MDL2 Assets";
+  font-size: 10px; }
+
+#window-controls {
+  -webkit-app-region: no-drag; }
+
+#window-controls .button {
+  grid-row: 1 / span 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%; }
+
+#window-controls .button {
+  user-select: none;
+  cursor: default;
+  color: #BBB; }
+
+#window-controls .button:hover {
+  background: rgba(255, 255, 255, 0.2);
+  color: #FFF; }
+
+#window-controls #min-button {
+  grid-column: 1; }
+
+#window-controls #max-button, #window-controls #restore-button {
+  grid-column: 2; }
+
+#window-controls #restore-button {
+  display: none; }
+
+#window-controls #close-button {
+  grid-column: 3; }
+
+#window-controls #close-button:hover {
+  background: #E81123; }
 
 ::-webkit-scrollbar {
   width: 7px;
@@ -253,7 +299,8 @@ div {
       top: 0;
       bottom: 0;
       right: 0;
-      left: 0; }
+      left: 0;
+      transition: transform .3s linear; }
     #user-list-c .user .user-back::after {
       content: '';
       background: rgba(0, 0, 0, 0.4);
@@ -261,9 +308,10 @@ div {
       top: 0;
       bottom: 0;
       right: 0;
-      left: 0; }
+      left: 0;
+      transition: background .3s linear; }
     #user-list-c .user .user-name {
-      transition: bottom .15s ease-in-out;
+      transition: bottom .15s ease-in-out, background .3s linear;
       position: absolute;
       bottom: -20%;
       background: #00000090;
@@ -271,8 +319,6 @@ div {
       text-align: start;
       width: 100%;
       padding-left: 5%; }
-    #user-list-c .user .user-name.active {
-      background: #004ad38c; }
     #user-list-c .user .user-btns {
       position: absolute;
       bottom: 10%;
@@ -296,6 +342,13 @@ div {
     bottom: 0%; }
   #user-list-c .user:hover .user-btns {
     opacity: 1; }
+  #user-list-c .user.active .user-name {
+    background: #00405e98;
+    color: #FFF; }
+  #user-list-c .user.active .user-back {
+    transform: scale(1.05); }
+  #user-list-c .user.active .user-back::after {
+    background: rgba(0, 0, 0, 0.1); }
 
 .code-area {
   width: 300px;
@@ -311,7 +364,13 @@ div {
     height: 100%;
     line-height: 150px;
     text-align: center;
-    font-size: 32px; }
+    font-size: 32px;
+    font-weight: bold; }
+  .code-area #current-user {
+    position: absolute;
+    left: 25px;
+    top: 20px;
+    font-size: 20px; }
   .code-area #code-time {
     position: absolute;
     top: 0;
@@ -397,20 +456,20 @@ div {
     font-size: 40px;
     line-height: 40px;
     padding-bottom: 7px;
-    width: 340px; }
+    width: 340px;
+    text-align: center; }
   .notrades #secret:focus {
     border-bottom: 1px solid #006faf;
-    box-shadow: 0 1px 0 0 #006faf;
-    text-align: center; }
+    box-shadow: 0 1px 0 0 #006faf; }
   .notrades #captcha {
     color: #FFF;
     font-size: 40px;
     line-height: 40px;
-    padding-bottom: 7px; }
+    padding-bottom: 7px;
+    text-align: center; }
   .notrades #captcha:focus {
     border-bottom: 1px solid #006faf;
-    box-shadow: 0 1px 0 0 #006faf;
-    text-align: center; }
+    box-shadow: 0 1px 0 0 #006faf; }
 
 .steam-bottom {
   display: grid;

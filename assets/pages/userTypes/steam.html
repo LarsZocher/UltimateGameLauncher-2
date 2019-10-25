@@ -6,6 +6,7 @@
     <div class="code-area">
         <div class="code-container">
             <div id="code-time"></div>
+            <div id="current-user"></div>
             <div id="current-code">CODE</div>
         </div>
     </div>
@@ -37,7 +38,6 @@
 <script>
     window.steamOffset = 0;
     window.steam2FA = false;
-    window.steamUser = app_getUsers()[0];
 
     async function addTrade(trade){
         console.log("[SteamType] Adding trade: "+trade.id);
@@ -88,6 +88,8 @@
     }
 
     function loadCode(){
+        if(!window.steamUser.auth ||!window.steamUser.auth.shared_secret || !window.steamUser.auth.deviceid || !window.steamUser.auth.identity_secret)
+            return;
         if(!window.steamSecret){
             var secret = document.getElementById("secret").value;
             window.steamSecret = secret;
@@ -101,6 +103,7 @@
             window.steamAuth = auth;
             auth.on("ready", function() {
                 document.getElementById("current-code").innerText = auth.calculateCode();
+                document.getElementById("current-user").innerText = window.steamUser.nickname;
 
                 window.steamOffset = SteamAuth.Offset;
 
@@ -118,8 +121,8 @@
                     }, 1000);
                 }, getRemainingTime());
 
+                $("#trades").html("");
                 var loadTrades = checkTradeCache();
-
                 if(loadTrades){
                     logIn(auth, {
                         username: window.steamUser.name,
@@ -223,16 +226,19 @@
     }
 
     function loadUsers(){
-        console.log("Loading users");
         var users = app_getUsers();
-        console.log(users.length);
+        console.log("[SteamType] Loading users ("+users.length+")");
         users.forEach(user => {
             addUser(user);
         });
+        setTimeout(function(){
+            if($(".user").length!=0)
+                $(".user")[0].click();
+        },10);
     }
 
     async function addUser(user){
-        console.log("Adding user: "+user.name);
+        console.log("[SteamType] Adding user: "+user.name);
 
         const e_li = document.createElement('li');
         const e_user = document.createElement('div');
@@ -259,11 +265,26 @@
         e_user.appendChild(e_btns);
         e_li.appendChild(e_user);
         document.getElementById("user-list").appendChild(e_li);
+
+        e_user.addEventListener("click", function(){
+            for (const o of document.querySelectorAll(".user")) {
+                if(o.classList.contains("active"))
+                    o.classList.remove("active");
+            }
+            e_user.classList.add("active");
+
+            var usr_before = window.steamUser;
+            window.steamUser = user;
+            window.steamUser.nickname = ui.getElementsByTagName("steamID")[0].childNodes[0].nodeValue;
+
+            if(window.steamSecret && usr_before.steam64id != user.steam64id)
+                loadCode();
+            
+        });
     }
 
     loadUsers();
 
-    console.log("secret: "+window.steamSecret);
     if (!window.steamSecret){
         window.steamSecret = "";
         document.getElementById("secret").addEventListener("keyup", function(){
@@ -284,7 +305,6 @@
             }
         });
     }else{
-        console.log("fromCache");
         loadCode();
         var pw = document.getElementById("tm-pw");
         pw.style.display = "none";

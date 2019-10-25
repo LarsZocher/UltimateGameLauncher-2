@@ -10,11 +10,27 @@
     <script src="../js/imageUtils.js"></script>
     <script src="../js/apps.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/aes.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.js"></script>
 </head>
 
 <body>
     <div id="head">
-        <div id="header"></div>
+        <div id="header">
+            <div id="window-controls">
+                <div class="button" id="min-button">
+                    <span>&#xE921;</span>
+                </div>
+                <div class="button" id="max-button">
+                    <span>&#xE922;</span>
+                </div>
+                <div class="button" id="restore-button">
+                    <span>&#xE923;</span>
+                </div>
+                <div class="button" id="close-button">
+                    <span>&#xE8BB;</span>
+                </div>
+            </div>
+        </div>
         <div id="navbar-container">
             <ul id="navbar">
                 <li>
@@ -27,13 +43,18 @@
                     <div class="navbar-header" onclick="loadPage('users.html', this)">Users</div>
                 </li>
                 <li>
-                    <div class="navbar-header" onclick="window.loadDataUser()">Load data</div>
+                    <div class="navbar-header" onclick="window.loadDataUser()">Settings</div>
                 </li>
             </ul>
         </div>
     </div>
     <div id="content"></div>
     <script>
+        try {
+            $ = jQuery = module.exports;
+        } catch(e) {}
+
+        require('../js/titleButtons.js');
         app_loadData();
 
         const SteamAuth = require("steamauth");

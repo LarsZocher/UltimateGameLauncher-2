@@ -1,4 +1,4 @@
-function $(id) {
+function $image(id) {
     return !id || id.nodeType === 1 ? id : document.getElementById(id);
 }
 function isType(o,t) {    return (typeof o).indexOf(t.charAt(0).toLowerCase()) === 0;}
@@ -7,7 +7,7 @@ function isType(o,t) {    return (typeof o).indexOf(t.charAt(0).toLowerCase()) =
 function image(src,cfg) {    var img, prop, target;
     cfg = cfg || (isType(src,'o') ? src : {});
 
-    img = $(src);
+    img = $image(src);
     if (img) {
         src = cfg.src || img.src;
     } else {
@@ -26,7 +26,7 @@ function image(src,cfg) {    var img, prop, target;
     // pull from cache)
     img.src = src;
 
-    target = $(cfg.target);
+    target = $image(cfg.target);
     if (target) {
         target.insertBefore(img, $(cfg.insertBefore) || null);
     }
