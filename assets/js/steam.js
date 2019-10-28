@@ -40,7 +40,7 @@ function getAppsById(cb, ids, force = false){
         toRequest[i] = "STEAM_"+toRequest[i];
         
     }
-    xmlhttp.open("GET", "http://192.168.2.100/ugl/index.php/getGames?uniqueID=" + toRequest.join(","), true);
+    xmlhttp.open("GET", "https://ugl.seemslegit.me/api/getGames?uniqueID=" + toRequest.join(","), true);
     xmlhttp.send();
 }
 
@@ -59,7 +59,7 @@ function getAppsFromUser(cb, userId, onlyGames = true){
             cb(result);
         }
     };
-    xmlhttp.open("GET", "http://192.168.2.100/ugl/index.php/getGamesFromUser?id=" + userId, true);
+    xmlhttp.open("GET", "https://ugl.seemslegit.me/api/getGamesFromUser?id=" + userId, true);
     xmlhttp.send();
 }
 

@@ -1,16 +1,23 @@
 var app_data = {};
 
 function app_loadData(){
+    const {app} = require('electron').remote;
     const fs = require('fs');
-    if(fs.existsSync('app_data.json')){
-        let rawdata = fs.readFileSync('app_data.json');
+    const path = require('path');
+    var config = path.join(app.getPath("userData"), 'app_data.json');
+    console.log("loading config from: "+config);
+    if(fs.existsSync(config)){
+        let rawdata = fs.readFileSync(config);
         app_data = JSON.parse(rawdata);
     }
 }
 
 function app_saveData(){
+    const {app} = require('electron').remote;
     const fs = require('fs');
-    fs.writeFileSync('app_data.json', JSON.stringify(app_data, null, 2));
+    const path = require('path');
+    var config = path.join(app.getPath("userData"), 'app_data.json');
+    fs.writeFileSync(config, JSON.stringify(app_data, null, 2));
 }
 
 function isDefined(object){
@@ -36,6 +43,23 @@ function app_getUsers(){
     return app_data["users"];
 }
 
+function app_userHasSG(user){
+    if(!isset(user, "auth"))
+        return false;
+    if(!isset(user.auth, "password"))
+        return false;
+    if(!isset(user.auth, "shared_secret"))
+        return false;
+    if(!isset(user.auth, "deviceid"))
+        return false;
+    if(!isset(user.auth, "identity_secret"))
+        return false;
+    return true;
+}
+
+function isset(obj, value){
+    return obj[value] && obj[value]!="null";
+}
 
 
 function encrypt(string, secret){

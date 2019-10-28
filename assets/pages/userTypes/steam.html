@@ -9,6 +9,18 @@
             <div id="current-user"></div>
             <div id="current-code">CODE</div>
         </div>
+        <div class="code-options">
+            <div id="co-openSteam" class="code-option-container">
+                <div class="code-option">
+                    <div class="co-text">Open Steam</div>
+                </div>
+            </div>
+            <div id="co-viewProfile" class="code-option-container">
+                <div class="code-option">
+                    <div class="co-text">View Profile</div>
+                </div>
+            </div>
+        </div>
     </div>
     <div class="trades-container">
         <ul id="trades">
@@ -16,6 +28,14 @@
         <div id="tm-nta" class="notrades" style="display: none;">
             <i class="fas fa-check"></i>
             <div class="notrades-text">Nothing to accept</div>
+        </div>
+        <div id="tm-loading" class="notrades" style="display: none;">
+            <i class="fas fa-spinner"></i>
+            <div class="notrades-text">Loading confirmations...</div>
+        </div>
+        <div id="tm-noSG" class="notrades" style="display: none;">
+            <i class="fas fa-times"></i>
+            <div class="notrades-text">No Steam-Guard informations available</div>
         </div>
         <div id="tm-error" class="notrades" style="display: none;">
             <i class="fas fa-exclamation-triangle"></i>
@@ -38,6 +58,14 @@
 <script>
     window.steamOffset = 0;
     window.steam2FA = false;
+
+    $("#co-openSteam").on("click", function() {
+        openSteam();
+    });
+    $("#co-viewProfile").on("click", function() {
+        if(window.steamUser)
+            require("electron").shell.openExternal("https://steamcommunity.com/profiles/"+window.steamUser.steam64id+"/");
+    });
 
     async function addTrade(trade){
         console.log("[SteamType] Adding trade: "+trade.id);
@@ -88,8 +116,20 @@
     }
 
     function loadCode(){
-        if(!window.steamUser.auth ||!window.steamUser.auth.shared_secret || !window.steamUser.auth.deviceid || !window.steamUser.auth.identity_secret)
+        if(window.codeRefresh)
+            clearInterval(window.codeRefresh);
+
+        $("#tm-noSG").css("display", "none");
+        $("#tm-loading").css("display", "none");
+        $("#trades").html("");
+        $("#current-code").text("CODE");
+        $("#current-user").text("");
+        $("#code-time").css("transform", "");
+
+        if(!app_userHasSG(window.steamUser)){
+            $("#tm-noSG").css("display", "grid");
             return;
+        }
         if(!window.steamSecret){
             var secret = document.getElementById("secret").value;
             window.steamSecret = secret;
@@ -109,9 +149,6 @@
 
                 updateCode(auth);
                 setTimeout(function() {
-
-                    if(window.codeRefresh)
-                        clearInterval(window.codeRefresh);
                     window.codeRefresh = setInterval(function(){
                         if(getRemainingTime()==30)
                             updateCode(auth);
@@ -121,7 +158,6 @@
                     }, 1000);
                 }, getRemainingTime());
 
-                $("#trades").html("");
                 var loadTrades = checkTradeCache();
                 if(loadTrades){
                     logIn(auth, {
@@ -153,6 +189,7 @@
     }
 
     function logIn(auth, options){
+        $("#tm-loading").css("display", "grid");
         auth.login(options, function(err, session) {
             if(!err){
                 window.steam2FA = false;
@@ -188,6 +225,7 @@
         var nta = document.getElementById("tm-nta");
         auth.getTradeConfirmations(function(err, trades)
         {
+            $("#tm-loading").css("display", "none");
             if(err){
                 console.log(err);
                 document.getElementById("tm-error-value").innerText = err.message;
@@ -214,9 +252,8 @@
     }
 
     function updateCode(auth){
-        var code = document.getElementById("current-code");
-        if(code!=null)
-            code.innerText = auth.calculateCode();
+        if($("#current-code").length!=0)
+            $("#current-code").text(auth.calculateCode());
         else
             clearInterval(window.codeRefresh);
     }
@@ -225,7 +262,7 @@
         loadCode();
     }
 
-    function loadUsers(){
+    async function loadUsers(){
         var users = app_getUsers();
         console.log("[SteamType] Loading users ("+users.length+")");
         users.forEach(user => {
@@ -234,7 +271,7 @@
         setTimeout(function(){
             if($(".user").length!=0)
                 $(".user")[0].click();
-        },10);
+        },20);
     }
 
     async function addUser(user){
@@ -276,6 +313,15 @@
             var usr_before = window.steamUser;
             window.steamUser = user;
             window.steamUser.nickname = ui.getElementsByTagName("steamID")[0].childNodes[0].nodeValue;
+
+            if(!window.steamSecret){
+                $("#tm-pw").css("display", "grid");
+                $("#tm-noSG").css("display", "none");
+            }
+            if(!app_userHasSG(window.steamUser)){
+                $("#tm-pw").css("display", "none");
+                $("#tm-noSG").css("display", "grid");
+            }
 
             if(window.steamSecret && usr_before.steam64id != user.steam64id)
                 loadCode();

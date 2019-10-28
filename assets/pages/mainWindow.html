@@ -9,6 +9,7 @@
     <script src="../js/steam.js"></script>
     <script src="../js/imageUtils.js"></script>
     <script src="../js/apps.js"></script>
+    <script src="../js/titleButtons.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/aes.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.js"></script>
 </head>
@@ -54,12 +55,16 @@
             $ = jQuery = module.exports;
         } catch(e) {}
 
-        require('../js/titleButtons.js');
         app_loadData();
 
         const SteamAuth = require("steamauth");
         const electron = require("electron");
+        const {ipcRenderer} = electron;
         const fs = require('fs');
+
+        ipcRenderer.on("message", function(event, text){
+            console.log(text);
+        });
 
         function loadPage(page, elem){
             loadPageContent(page, document.getElementById("content"));
@@ -81,7 +86,7 @@
             });
         }
 
-        loadPage("users.html", document.getElementById("nav-games"));
+        loadPage("games.html", document.getElementById("nav-games"));
     </script>
 </body>
 

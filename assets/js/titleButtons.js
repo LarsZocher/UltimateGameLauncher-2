@@ -2,6 +2,7 @@ const remote = require('electron').remote;
 
 (function handleWindowControls() {
     // When document has loaded, initialise
+    remote.getCurrentWindow().removeAllListeners();
     document.onreadystatechange = () => {
         if (document.readyState == "complete") {
             init();

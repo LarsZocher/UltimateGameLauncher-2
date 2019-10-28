@@ -1,20 +1,67 @@
 const electron = require('electron');
 const url = require('url');
 const path = require('path');
+const {autoUpdater} = require("electron-updater");
 
 const { app, BrowserWindow, Menu, ipcMain} = electron;
 
 let mainWindow;
 let addWindow;
+let updateWindow;
+
+const sendStatusToWindow = (text) => {
+    if(updateWindow) {
+        updateWindow.webContents.send("message", text);
+    }
+}
+
+const updateStatus = (percent, speed, downloaded) => {
+    if(updateWindow) {
+        updateWindow.webContents.send("u-update", percent, speed, downloaded);
+    }
+}
+
+autoUpdater.on('checking-for-update', () => {
+    sendStatusToWindow('Checking for update...');
+})
+autoUpdater.on('update-available', (info) => {
+    sendStatusToWindow('Update available.');
+})
+autoUpdater.on('update-not-available', (info) => {
+    sendStatusToWindow('Update not available.');
+    updateFinished();
+})
+autoUpdater.on('error', (err) => {
+    sendStatusToWindow('Error in auto-updater. ' + err);
+    updateFinished();
+})
+autoUpdater.on('download-progress', (progressObj) => {
+    let log_message = "Download speed: " + progressObj.bytesPerSecond/1000;
+    log_message = log_message + ' - Downloaded ' + progressObj.percent + '%';
+    log_message = log_message + ' (' + progressObj.transferred + "/" + progressObj.total + ')';
+    sendStatusToWindow("Downloading update...");
+    updateStatus(progressObj.percent, progressObj.bytesPerSecond/1000, progressObj.transferred + "/" + progressObj.total);
+})
+autoUpdater.on('update-downloaded', (info) => {
+    sendStatusToWindow('Update downloaded');
+    setTimeout(function() {
+        autoUpdater.quitAndInstall();
+    }, 500);
+});
+
+function updateFinished(){
+    createMainWindow();
+    updateWindow.close();
+}
 
 //Listen for the app to be ready
-app.on('ready', function () {
+function createMainWindow() {
     //Create new window
     mainWindow = new BrowserWindow({
         webPreferences:{
             nodeIntegration: true
         },
-        width: 1100,
+        width: 1256,
         height: 600,
         frame: false,
         backgroundColor: '#111111'
@@ -34,8 +81,41 @@ app.on('ready', function () {
     //Build menu from template
     const mainMenu = Menu.buildFromTemplate(mainMenuTemplate);
     Menu.setApplicationMenu(mainMenu);
+}
 
+function createUpdateWindow(){
+    updateWindow = new BrowserWindow({
+        webPreferences:{
+            nodeIntegration: true
+        },
+        width: 400,
+        height: 150,
+        frame: false,
+        resizable: false,
+        backgroundColor: '#111111'
+    });
+    console.log(__dirname);
 
+    updateWindow.loadURL(url.format({
+        pathname: path.join(__dirname, '../pages/update.html'),
+        protocol: 'file',
+        slashes: true
+    }));
+
+    updateWindow.on('closed', function () {
+        updateWindow = null;
+    })
+}
+
+app.on('ready', function()  {
+    if(!app.isPackaged){
+        createMainWindow();
+    }else{
+        createUpdateWindow();
+        updateWindow.webContents.once('dom-ready', function () {
+            autoUpdater.checkForUpdatesAndNotify();
+        });
+    }
 });
 
 //Handle add window

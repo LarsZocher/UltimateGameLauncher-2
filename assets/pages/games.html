@@ -16,7 +16,7 @@
             </li>
             <li>
                 <div class="info-item">
-                    <div class="info-title">Start with</div>
+                    <div class="info-title">User</div>
                     <div class="info-value" id="info-user"></div>
                 </div>
             </li>
@@ -61,7 +61,7 @@
             div.setAttribute("ondblclick", "openApp("+app.appId+")");
             div.setAttribute("onClick", "window.setCurrentGame("+app.appId+")")
 
-            img.src = 'https://steamcdn-a.akamaihd.net/steamcommunity/public/images/apps/'+app.appId+'/'+app.iconName+'.ico';
+            img.src = 'https://steamcdn-a.akamaihd.net/steamcommunity/public/images/apps/'+app.appId+'/'+app.icon+'.jpg';
             div.appendChild(img);
             div.appendChild(name);
             games.appendChild(div);
