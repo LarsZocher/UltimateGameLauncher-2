@@ -9,6 +9,9 @@ function app_loadData(){
     if(fs.existsSync(config)){
         let rawdata = fs.readFileSync(config);
         app_data = JSON.parse(rawdata);
+        if(!app_data.apps) {
+            app_data["apps"] = {};
+        }
     }
 }
 
@@ -27,14 +30,6 @@ function isDefined(object){
 function app_getUsers(){
     if(!isDefined(app_data["users"])){
         app_data["users"] = [];
-        app_data["users"][0] = {};
-        app_data["users"][0]["name"] = "null";
-        app_data["users"][0]["steam64id"] = "null";
-        app_data["users"][0]["auth"] = {};
-        app_data["users"][0]["auth"]["password"] = "null";
-        app_data["users"][0]["auth"]["shared_secret"] = "null";
-        app_data["users"][0]["auth"]["deviceid"] = "null";
-        app_data["users"][0]["auth"]["identity_secret"] = "null";
         app_saveData();
         return [];
     }
@@ -44,26 +39,36 @@ function app_getUsers(){
 }
 
 function app_userHasSG(user){
-    if(!isset(user, "auth"))
+    if(!app_userHasSecret(user))
         return false;
-    if(!isset(user.auth, "password"))
+    if(!issetval(user.auth, "password"))
         return false;
-    if(!isset(user.auth, "shared_secret"))
+    if(!issetval(user.auth, "deviceid"))
         return false;
-    if(!isset(user.auth, "deviceid"))
-        return false;
-    if(!isset(user.auth, "identity_secret"))
+    if(!issetval(user.auth, "identity_secret"))
         return false;
     return true;
 }
 
-function isset(obj, value){
-    return obj[value] && obj[value]!="null";
+function app_userHasSecret(user){
+    if(!issetval(user, "auth"))
+        return false;
+    if(!issetval(user.auth, "shared_secret"))
+        return false;
+    return true;
+}
+
+function issetval(obj, value){
+    return (isDefined(obj[value]) && obj[value]!="null");
+}
+
+function isset(obj){
+    return (isDefined(obj) && obj!="null");
 }
 
 
 function encrypt(string, secret){
-    console.log(CryptoJS.AES.encrypt(string, secret).toString());
+    return CryptoJS.AES.encrypt(string, secret).toString();
 }
 
 function decrypt(string, secret){

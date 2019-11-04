@@ -10,6 +10,11 @@
             <div id="current-code">CODE</div>
         </div>
         <div class="code-options">
+            <div id="co-refreshTrades" class="code-option-container">
+                <div class="code-option">
+                    <div class="co-text">Refresh trades</div>
+                </div>
+            </div>
             <div id="co-openSteam" class="code-option-container">
                 <div class="code-option">
                     <div class="co-text">Open Steam</div>
@@ -66,6 +71,18 @@
         if(window.steamUser)
             require("electron").shell.openExternal("https://steamcommunity.com/profiles/"+window.steamUser.steam64id+"/");
     });
+    $("#co-refreshTrades").on("click", function() {
+        if(window.steamSecret)
+            logIn({
+                username: window.steamUser.name,
+                password: decrypt(window.steamUser.auth.password, window.steamSecret)
+            });
+    });
+
+    function clearScreen(){
+        $("#tm-nta").css("display", "none");
+        $("#tm-error").css("display", "none");
+    }
 
     async function addTrade(trade){
         console.log("[SteamType] Adding trade: "+trade.id);
@@ -160,7 +177,7 @@
 
                 var loadTrades = checkTradeCache();
                 if(loadTrades){
-                    logIn(auth, {
+                    logIn({
                         username: window.steamUser.name,
                         password: decrypt(window.steamUser.auth.password, window.steamSecret)
                     });
@@ -173,7 +190,7 @@
     }
 
     function checkTradeCache(){
-        if(window.tradeCache){
+        if(isDefined(window.tradeCache)){
             if(window.tradeCache == 0){
                 document.getElementById("tm-nta").style.display = "grid";
             }else{
@@ -188,13 +205,14 @@
         }
     }
 
-    function logIn(auth, options){
+    function logIn(options){
+        clearScreen();
         $("#tm-loading").css("display", "grid");
-        auth.login(options, function(err, session) {
+        window.steamAuth.login(options, function(err, session) {
             if(!err){
                 window.steam2FA = false;
                 console.log("[SteamAuth] Logged in!");
-                loadTrades(auth);
+                loadTrades();
             }else{
                 console.log(err);
 
@@ -221,9 +239,9 @@
         });
     }
 
-    function loadTrades(auth){
+    function loadTrades(){
         var nta = document.getElementById("tm-nta");
-        auth.getTradeConfirmations(function(err, trades)
+        window.steamAuth.getTradeConfirmations(function(err, trades)
         {
             $("#tm-loading").css("display", "none");
             if(err){
@@ -314,6 +332,7 @@
             window.steamUser = user;
             window.steamUser.nickname = ui.getElementsByTagName("steamID")[0].childNodes[0].nodeValue;
 
+            clearScreen();
             if(!window.steamSecret){
                 $("#tm-pw").css("display", "grid");
                 $("#tm-noSG").css("display", "none");

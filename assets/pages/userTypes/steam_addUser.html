@@ -1,0 +1,60 @@
+<div class="menu-content-container">
+    <div class="menu-content">
+        <div class="menu-side">
+            <div class="menu-list-container">
+                <div class="menu-list-title">Steam<i class="material-icons" id="u-add-steam">add</i></div>
+                <ul id="steam-users" class="menu-list">
+                </ul>
+                <div class="menu-list-title">BattleNet<i class="material-icons">add</i></div>
+                <ul class="menu-list">
+                </ul>
+            </div>
+        </div>
+        <div class="menu-main-container">
+            <div id="menu-main-content" class="menu-main">
+                <div class="menu-m-c"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+
+    function loadUsers(){
+        loadSteamUsers();
+
+        if($(".menu-li").length!=0){
+            $(".menu-li").first().click();
+        }
+    }
+
+    function loadSteamUsers(){
+        var users = app_getUsers();
+        for (const user of users) {
+            var li = $("<li></li>");
+            li.append($('<div class="menu-li"></div>').text(user.name));
+            li.children(0).on("click", (event)=>{
+                loadPageContentSync("/settings/content/steamUser.html", $("#menu-main-content").get(0), {tag: user.name});
+                $(".menu-li").each(function(){
+                    $(this).removeClass("active");
+                });
+                $(event.target).addClass("active");
+                window.users.editSteamUser(user);
+            });
+            $("#steam-users").append(li);
+        }
+    }
+
+    setTimeout(function() {
+        loadUsers();
+    }, 0);
+
+    (function(){
+        $("#u-add-steam").on("click", (event)=>{
+            loadPageContentSync("/settings/content/steamUser.html", $("#menu-main-content").get(0), {tag: "newSteam"});
+            $(".menu-li").each(function(){
+                $(this).removeClass("active");
+            });
+            window.users.newUser();
+        });
+    })();
+</script>

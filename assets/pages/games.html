@@ -114,46 +114,49 @@
             console.log("Game data sorted");
             parseData(apps);
             console.log("Game data parsed");
-            window.setCurrentGame(apps[0].appId);
+            if(apps.length!=0)
+                window.setCurrentGame(apps[0].appId);
             loadDataFromUsers(first);
         }, appsInCache);
     }
 
-    window.loadDataFromUsers = function(first = false){
+    window.loadDataFromUsers = async function(first = false){
         users = app_getUsers();
         var all_data = [];
         var appIds = [];
-        var reqDone = 0;
+        var appsInCache = getAppIdsFromCache();
         for(user of users){
-            getAppsFromUser(function(data){
-                for(app of data){
-                    if(appIds.includes(app.appId)){
-                        continue;
+            const currentUser = user;
+            let p = new Promise((res, rej) => {
+                getAppsFromUser(function(data){
+                    for(app of data){
+                        if(appIds.includes(app.appId)){
+                            continue;
+                        }
+                        appIds.push(app.appId);
+
+                        if(!isDefined(app_data["apps"]))
+                            app_data["apps"] = {};
+                        if(!isDefined(app_data["apps"][app.appId]))
+                            app_data["apps"][app.appId] = {};
+                        if(!isDefined(app_data["apps"][app.appId]["user"]))
+                            app_data["apps"][app.appId]["user"] = currentUser.name;
+                        all_data.push(app);
                     }
-                    appIds.push(app.appId);
+                    res();
+                }, user.steam64id);
+            });
+            await p;
+        }
 
-                    app["user"] = user.name;
+        app_saveData();
+        if(appsInCache.length == all_data.length || all_data.length == 0)
+            return;
+        all_data = sortData(all_data);
 
-                    if(!isDefined(app_data["apps"]))
-                        app_data["apps"] = {};
-                    if(!isDefined(app_data["apps"][app.appId]))
-                        app_data["apps"][app.appId] = {};
-                    if(!isDefined(app_data["apps"][app.appId]["user"]))
-                        app_data["apps"][app.appId]["user"] = user.name;
-                    all_data.push(app);
-                }
-                reqDone++;
-                if(reqDone==users.length){
-                    if(getAppIdsFromCache().length == all_data.length || all_data.length == 0)
-                        return;
-                    all_data = sortData(all_data);
-
-                    parseData(all_data, true);
-                    if(first&&all_data[0].appId!=null&&appsInCache.length==0){
-                        window.setCurrentGame(all_data[0].appId);
-                }
-            }
-            }, user.steam64id); //76561198242115578 // 76561198085862571
+        parseData(all_data, true);
+        if(first&&all_data[0].appId!=null&&appsInCache.length==0){
+            window.setCurrentGame(all_data[0].appId);
         }
     }
 

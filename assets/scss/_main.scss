@@ -38,6 +38,7 @@ div{
     position: fixed;
     width: 100%;
     z-index: 100;
+    pointer-events: none;
 }
 
 #header {
@@ -53,6 +54,7 @@ div{
     float: right;
     margin-top: 15px;
     padding-right: 20px;
+    pointer-events: all;
 }
 
 #navbar li{
@@ -101,6 +103,7 @@ div{
     height: 30px;
     font-family: "Segoe MDL2 Assets";
     font-size: 10px;
+    pointer-events: all;
 }
 #window-controls {
     -webkit-app-region: no-drag;
@@ -116,7 +119,8 @@ div{
 #window-controls .button {
     user-select: none;
     cursor: default;
-    color: #BBB;
+    color: rgb(236, 236, 236);
+    background: rgba(0, 0, 0, 0.1);
 }
 #window-controls .button:hover {
     background: rgba(255,255,255,0.2);

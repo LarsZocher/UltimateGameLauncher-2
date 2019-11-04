@@ -5,6 +5,7 @@
     <title>UltimateGameLauncher</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.css" integrity="sha256-46qynGAkLSFpVbEBog43gvNhfrOj+BmwXdxFgVK/Kvc=" crossorigin="anonymous" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="../css/app.css">
     <script src="../js/steam.js"></script>
     <script src="../js/imageUtils.js"></script>
@@ -12,6 +13,7 @@
     <script src="../js/titleButtons.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/aes.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.js"></script>
+    
 </head>
 
 <body>
@@ -44,7 +46,7 @@
                     <div class="navbar-header" onclick="loadPage('users.html', this)">Users</div>
                 </li>
                 <li>
-                    <div class="navbar-header" onclick="window.loadDataUser()">Settings</div>
+                    <div id="nav-settings" class="navbar-header" onclick="loadPage('userTypes/steam_addUser.html', this)">Settings</div>
                 </li>
             </ul>
         </div>
@@ -61,13 +63,16 @@
         const electron = require("electron");
         const {ipcRenderer} = electron;
         const fs = require('fs');
+        var currentPage = {};
 
         ipcRenderer.on("message", function(event, text){
             console.log(text);
         });
 
-        function loadPage(page, elem){
-            loadPageContent(page, document.getElementById("content"));
+        function loadPage(page, elem, options = {}){
+            if(!options.deleteAll)
+                options.deleteAll = true;
+            loadPageContent(page, document.getElementById("content"), options);
             for (const o of document.querySelectorAll(".navbar-header")) {
                 if(o.classList.contains("active"))
                     o.classList.remove("active");
@@ -75,7 +80,13 @@
             elem.classList.add("active");
         }
 
-        function loadPageContent(page, container){
+        function loadPageContent(page, container, options = {}){
+            var pagetag = page + (options.tag?options.tag:"");
+            if(currentPage[container.id] && currentPage[container.id] == pagetag && !options.force)
+                return
+            if(options.deleteAll)
+                currentPage = {};
+            currentPage[container.id] = pagetag;
             console.log("loading in content: "+__dirname +"\\"+ page);
             fs.readFile(__dirname +"\\"+ page, (err, data) => {
                 container.innerHTML = data
@@ -84,6 +95,23 @@
                     eval(scripts[i].innerText);
                 }
             });
+        }
+
+        function loadPageContentSync(page, container, options = {}){
+            var pagetag = page + (options.tag?options.tag:"");
+            if(currentPage[container.id] && currentPage[container.id] == pagetag && !options.force)
+                return
+            if(options.deleteAll)
+                currentPage = {};
+            currentPage[container.id] = pagetag;
+            console.log("loading in content sync: "+__dirname +"\\"+ page);
+            var data = fs.readFileSync(__dirname +"\\"+ page);
+
+            container.innerHTML = data
+            var scripts = container.getElementsByTagName("script");
+            for (var i = 0; i < scripts.length; i++) {
+                eval(scripts[i].innerText);
+            }
         }
 
         loadPage("games.html", document.getElementById("nav-games"));

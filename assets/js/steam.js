@@ -64,6 +64,9 @@ function getAppsFromUser(cb, userId, onlyGames = true){
 }
 
 function getAppIdsFromCache(){
+    if(!app_data["apps"]){
+        return [];
+    }
     return Object.keys(app_data["apps"]);
 }
 

@@ -63,6 +63,8 @@ function createMainWindow() {
         },
         width: 1256,
         height: 600,
+        minHeight: 600,
+        minWidth: 1000,
         frame: false,
         backgroundColor: '#111111'
     });
