@@ -9,10 +9,11 @@
                 <ul class="menu-list">
                 </ul>
             </div>
+            <div id="menu-ver">VERSION</div>
         </div>
         <div class="menu-main-container">
             <div id="menu-main-content" class="menu-main">
-                <div class="menu-m-c"></div>
+
             </div>
         </div>
     </div>
@@ -56,5 +57,7 @@
             });
             window.users.newUser();
         });
+
+        $("#menu-ver").text("Version: "+electron.remote.app.getVersion());
     })();
 </script>

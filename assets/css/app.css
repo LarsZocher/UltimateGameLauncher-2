@@ -149,6 +149,24 @@ div {
 ::-webkit-scrollbar-corner {
   background: transparent; }
 
+#option-container {
+  background: #3b3b3b;
+  color: #bbb9b9;
+  display: grid;
+  position: absolute;
+  overflow-x: hidden;
+  overflow-y: auto;
+  box-shadow: -12px 21px 52px -1px rgba(0, 0, 0, 0.56); }
+  #option-container #option-content div {
+    width: 100%;
+    font-size: 17px;
+    line-height: 30px;
+    padding-left: 0px; }
+  #option-container #option-content div:hover {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.062);
+    color: #cecece; }
+
 #games-list {
   position: relative;
   width: 300px;
@@ -174,12 +192,12 @@ div {
 #header-section {
   position: relative;
   background: #035bc0;
-  height: 65vh;
+  height: 400px;
   width: 100%;
   margin: 0; }
   #header-section #header-img {
     width: 100%;
-    height: 65vh;
+    height: 400px;
     background-size: cover;
     background-position-x: center; }
   #header-section #header-name {
@@ -227,10 +245,12 @@ div {
   background: #FFFFFF10; }
 
 #menu-items {
+  display: inline-block;
   width: calc(100% - 30px);
   height: 50px;
   margin: 15px;
-  list-style-type: none; }
+  list-style-type: none;
+  white-space: nowrap; }
   #menu-items li {
     float: left;
     padding-right: 50px; }
@@ -239,16 +259,33 @@ div {
 
 .info-item {
   display: grid;
-  grid-auto-rows: 1fr 1fr; }
+  grid-auto-rows: 1fr 1fr;
+  min-width: 120px;
+  height: 50px;
+  position: relative; }
   .info-item .info-title {
     color: #e6e6e6;
     font-size: 17px;
     line-height: 19px;
-    text-transform: uppercase; }
+    text-transform: uppercase;
+    height: 25px; }
   .info-item .info-value {
     color: #b3b3b3;
     font-size: 17px;
     line-height: 1fr; }
+
+#info-user i {
+  float: right;
+  line-height: 25px; }
+
+#info-user.active {
+  top: 25px;
+  position: absolute;
+  background: #4e4e4e;
+  max-height: 100px;
+  height: 75px;
+  overflow: scroll;
+  z-index: 100; }
 
 .launch-btn {
   width: 240px;
@@ -579,6 +616,13 @@ div {
   height: 100%;
   background: maroon; }
 
+#menu-ver {
+  position: absolute;
+  color: #acacac;
+  font-size: 15px;
+  left: 30px;
+  bottom: 30px; }
+
 .s-headline {
   color: #FFF;
   margin: 0 0 20px 0;
@@ -784,6 +828,16 @@ div {
     height: 5px;
     background: #0c70ce;
     z-index: 10; }
+
+#alerts {
+  position: absolute;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.342);
+  z-index: 1000; }
 
 .col-1 {
   width: 8.33%; }

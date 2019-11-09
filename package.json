@@ -1,6 +1,6 @@
 {
   "name": "ugl",
-  "version": "0.2.0",
+  "version": "0.2.4",
   "description": "UltimateGameLauncher",
   "main": "assets/js/main.js",
   "scripts": {
@@ -37,9 +37,7 @@
       }
     ],
     "nsis": {
-      "oneClick": false,
       "perMachine": true,
-      "allowElevation": true,
       "createDesktopShortcut": true,
       "installerIcon": "build/icon2.ico",
       "uninstallerIcon": "build/icon2.ico",
@@ -47,8 +45,7 @@
     },
     "win":{
       "target": "nsis",
-      "icon": "build/icon2.ico",
-      "publisherName": "BubbleEgg"
+      "icon": "build/icon2.ico"
     },
     "productName": "Ultimate Game Laucher",
     "appId": "com.github.BubbleEgg.UltimateGameLauncher-2",

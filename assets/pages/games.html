@@ -1,5 +1,5 @@
 <aside id="games-list">
-    <h2 class="gl-headline">Steam</h2>
+    <h2 class="gl-headline">STEAM</h2>
     <div id="games">
 
     </div>
@@ -100,7 +100,7 @@
             name.innerText = app[0].displayName;
             currentGame = app[0];
             if(isDefined(app_data["apps"][appId].user))
-                document.querySelector("#info-user").innerText = app_data["apps"][appId].user;
+                document.querySelector("#info-user").innerHTML = app_data["apps"][appId].user + '<i class="fas fa-chevron-down"></i>';
             document.querySelector("#info-dev").innerText = app[0].developer;
         }, [appId])
     }
@@ -174,5 +174,28 @@
             parallax.style.backgroundPosition = elBackgrounPos;
         };
 
+        var users = app_getUsers();
+        options = [];
+
+        for (const user of users) {
+            var option = {};
+            option.name = user.name;
+            option.onClick = function(){
+                app_data["apps"][currentGame.appId]["user"] = user.name;
+                app_saveData();
+                setCurrentGame(currentGame.appId);
+            }
+            options.push(option);
+        }
+
+        $("#info-user").click(function(e){
+            console.log($("#info-user").width());
+            showOptions({
+                width: $("#info-user").width(),
+                left: $("#info-user").offset().left,
+                top: $("#info-user").offset().top,
+                maxHeight: 200
+             }, options, e);
+        });
     })();
 </script>

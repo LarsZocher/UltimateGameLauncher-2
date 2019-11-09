@@ -4,3 +4,4 @@ package-lock.json
 public/assets/css/app.css
 app_data.json
 dist/*
+todo.txt

@@ -52,6 +52,16 @@
         </div>
     </div>
     <div id="content"></div>
+    <div id="alerts" style="display: none;">
+        <div id="alert-container"></div>
+    </div>
+    <div id="options">
+        <div id="option-container">
+            <div id="option-content">
+            
+            </div>
+        </div>
+    </div>
     <script>
         try {
             $ = jQuery = module.exports;
@@ -63,6 +73,7 @@
         const electron = require("electron");
         const {ipcRenderer} = electron;
         const fs = require('fs');
+        const path = require("path");
         var currentPage = {};
 
         ipcRenderer.on("message", function(event, text){
@@ -112,6 +123,50 @@
             for (var i = 0; i < scripts.length; i++) {
                 eval(scripts[i].innerText);
             }
+        }
+
+        $(document.body).click(function(){
+            if($("#options").css("display")!="none")
+                hideOptions();
+        });
+
+        function hideOptions(){
+            console.log("hide");
+            $("#options").css("display", "none");
+            $("#option-content").html("");
+        }
+
+        function showOptions(pos, options, event){
+            event.stopPropagation();
+            $("#options").css("display", "block");
+            $("#option-content").html("");
+            for(const e of options) {
+                
+                div = $("<div></div>");
+                div.text(e.name);
+                div.click(function(){
+                    hideOptions();
+                    e.onClick();
+                })
+                $("#option-content").append(div);
+            };
+
+            $("#option-container").css("top", pos.top).css("left", pos.left);
+            if(pos.width){
+                $("#option-container").css("width", pos.width);
+                $("#option-content").css("width", pos.width);
+            }else{
+                $("#option-container").css("width", "");
+                $("#option-content").css("width", "");
+            }
+            if(pos.height)
+                $("#option-container").css("height", pos.height);
+            else
+                $("#option-container").css("height", "");
+            if(pos.maxHeight)
+                $("#option-container").css("max-height", pos.maxHeight);
+            else
+                $("#option-container").css("max-height", "");
         }
 
         loadPage("games.html", document.getElementById("nav-games"));

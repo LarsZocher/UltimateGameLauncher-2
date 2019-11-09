@@ -33,7 +33,9 @@ autoUpdater.on('update-not-available', (info) => {
 })
 autoUpdater.on('error', (err) => {
     sendStatusToWindow('Error in auto-updater. ' + err);
-    updateFinished();
+    setTimeout(()=>{
+        updateFinished();
+    }, 1000);
 })
 autoUpdater.on('download-progress', (progressObj) => {
     let log_message = "Download speed: " + progressObj.bytesPerSecond/1000;
@@ -44,9 +46,7 @@ autoUpdater.on('download-progress', (progressObj) => {
 })
 autoUpdater.on('update-downloaded', (info) => {
     sendStatusToWindow('Update downloaded');
-    setTimeout(function() {
-        autoUpdater.quitAndInstall();
-    }, 500);
+    autoUpdater.quitAndInstall();
 });
 
 function updateFinished(){
