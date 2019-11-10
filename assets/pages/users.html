@@ -2,10 +2,10 @@
     <aside class="side-types">
         <ul class="types">
             <li>
-                <img src="../icons/types/steam.png" alt="" onclick="window.users_loadPage('steam.html')">
+                <img src="../icons/types/steam.png" alt="" onclick="window.page.loadPage('user-steam')">
             </li>
             <li>
-                <img src="../icons/types/battlenet.png" alt="" onclick="window.users_loadPage('steam.html')">
+                <img src="../icons/types/battlenet.png" alt="" onclick="window.page.loadPage('user-steam')">
             </li>
         </ul>
     </aside>
@@ -15,9 +15,6 @@
 </div>
 
 <script>
-    window.users_loadPage = function(page){
-        loadPageContent('userTypes/'+page, document.getElementById('user-content'));
-    }
-
-    window.users_loadPage("steam.html");
+    window.page.registerPage("user-steam", "userTypes/steam.html", "#user-content");
+    window.page.loadPage("user-steam");
 </script>

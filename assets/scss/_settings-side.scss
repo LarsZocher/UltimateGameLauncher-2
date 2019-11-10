@@ -13,8 +13,39 @@
         position: relative;
         float: left;
 
+        .menu-back{
+            position: absolute;
+            left: 30px;
+            top: 30px;
+            color: rgb(228, 228, 228);
+            border-bottom: 1px solid rgb(124, 124, 124);
+            padding-bottom: 5px;
+            width: 140px;
+            height: 35px;
+            white-space: nowrap;
+            text-align: center;
+            transition: all .1s ease;
+
+            i {
+                line-height: 20px;
+                font-size: 15px;
+                float: left;
+            }
+
+            span {
+                margin-left: 10px;
+                line-height: 20px;
+                font-size: 17px;
+                width: 240px;
+            }
+        }
+
+        .menu-back:hover {
+            color: #FFF;
+        }
+
         .menu-list-container {
-            margin: 45px 0 0 0;
+            margin: 70px 0 0 0;
             width: calc(100% - 20px);
         }
 
@@ -91,12 +122,6 @@
     max-width: 100%;
     min-width: 640px;
     background: transparent;
-}
-
-.menu-m-c {
-    width: 100%;
-    height: 100%;
-    background: maroon;
 }
 
 #menu-ver{

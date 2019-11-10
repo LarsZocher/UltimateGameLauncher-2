@@ -1,6 +1,10 @@
 <div class="menu-content-container">
     <div class="menu-content">
         <div class="menu-side">
+            <div class="menu-back">
+                <i class="fas fa-arrow-left"></i>
+                <span>Users settings</span>
+            </div>
             <div class="menu-list-container">
                 <div class="menu-list-title">Steam<i class="material-icons" id="u-add-steam">add</i></div>
                 <ul id="steam-users" class="menu-list">
@@ -20,11 +24,16 @@
 </div>
 <script>
 
+    window.page.registerPage("settings-users-steam", "/settings/users/steamUser.html", "#menu-main-content", {}, {type: ".menu-li", active: "active"});
+
     function loadUsers(){
+        $(".menu-li").remove();
         loadSteamUsers();
 
         if($(".menu-li").length!=0){
             $(".menu-li").first().click();
+        }else{
+            $("#u-add-steam").click();
         }
     }
 
@@ -34,10 +43,7 @@
             var li = $("<li></li>");
             li.append($('<div class="menu-li"></div>').text(user.name));
             li.children(0).on("click", (event)=>{
-                loadPageContentSync("/settings/content/steamUser.html", $("#menu-main-content").get(0), {tag: user.name});
-                $(".menu-li").each(function(){
-                    $(this).removeClass("active");
-                });
+                window.page.loadPageSync("settings-users-steam", {tag: user.name});
                 $(event.target).addClass("active");
                 window.users.editSteamUser(user);
             });
@@ -45,17 +51,16 @@
         }
     }
 
-    setTimeout(function() {
-        loadUsers();
-    }, 0);
+    loadUsers();
 
     (function(){
         $("#u-add-steam").on("click", (event)=>{
-            loadPageContentSync("/settings/content/steamUser.html", $("#menu-main-content").get(0), {tag: "newSteam"});
-            $(".menu-li").each(function(){
-                $(this).removeClass("active");
-            });
+            window.page.loadPageSync("settings-users-steam", {tag: "newSteam"});
             window.users.newUser();
+        });
+
+        $(".menu-back").click(function(){
+            window.page.loadPage("settings");
         });
 
         $("#menu-ver").text("Version: "+electron.remote.app.getVersion());

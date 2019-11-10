@@ -122,7 +122,45 @@
         e_trade.appendChild(e_options);
         e_trade.appendChild(e_details);
         e_li.appendChild(e_trade);
+        $(e_trade).attr("trade", trade.id);
         document.getElementById("trades").appendChild(e_li);
+
+        $(e_accept).click(function(){
+            window.steamAuth.acceptTradeConfirmation(trade.id, trade.key, function(err)
+            {
+                if(err){
+                    console.log("[SteamAuth] Failed to accept trade");
+                    return;
+                }
+                console.log("[SteamAuth] Trade successfully accepted");
+                removeTrade(trade.id);
+            });
+        });
+        $(e_deny).click(function(){
+            window.steamAuth.rejectTradeConfirmation(trade.id, trade.key, function(err)
+            {
+                if(err){
+                    console.log("[SteamAuth] Failed to deny trade");
+                    return;
+                }
+                console.log("[SteamAuth] Trade successfully denied");
+                removeTrade(trade.id);
+            });
+        });
+    }
+
+    function removeTrade(id){
+        $(".trade").each(function(){
+            if($(this).attr("trade")==id){
+                $(this).parent().remove();
+            }
+        });
+
+        for (var i = 0; i < window.tradeCache.length; i++) {
+            if(window.tradeCache[i].id == id){
+                window.tradeCache.splice(i, 1);
+            }
+        }
     }
 
     function stripHtml(html)

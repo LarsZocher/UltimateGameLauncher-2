@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.css" integrity="sha256-46qynGAkLSFpVbEBog43gvNhfrOj+BmwXdxFgVK/Kvc=" crossorigin="anonymous" />
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/app.css">
     <script src="../js/steam.js"></script>
     <script src="../js/imageUtils.js"></script>
@@ -40,13 +41,13 @@
                     <div class="navbar-header">UltimateGameLauncher</div>
                 </li>
                 <li>
-                    <div id="nav-games" class="navbar-header" onclick="loadPage('games.html', this)">Games</div>
+                    <div id="nav-games" class="navbar-header" onclick="page.loadPage('games')">Games</div>
                 </li>
                 <li>
-                    <div class="navbar-header" onclick="loadPage('users.html', this)">Users</div>
+                    <div id="nav-users" class="navbar-header" onclick="page.loadPage('users')">Users</div>
                 </li>
                 <li>
-                    <div id="nav-settings" class="navbar-header" onclick="loadPage('userTypes/steam_addUser.html', this)">Settings</div>
+                    <div id="nav-settings" class="navbar-header" onclick="page.loadPage('settings')">Settings</div>
                 </li>
             </ul>
         </div>
@@ -74,7 +75,12 @@
         const {ipcRenderer} = electron;
         const fs = require('fs');
         const path = require("path");
-        var currentPage = {};
+        const page = require("../js/pages");
+        window.page = page;
+
+        page.registerPage("games", "games.html", "#content", {deleteAll: true}, {type: ".navbar-header", self: "#nav-games", active: "active"});
+        page.registerPage("users", "users.html", "#content", {deleteAll: true}, {type: ".navbar-header", self: "#nav-users", active: "active"});
+        page.registerPage("settings", "settings/settings.html", "#content", {deleteAll: true}, {type: ".navbar-header", self: "#nav-settings", active: "active"});
 
         ipcRenderer.on("message", function(event, text){
             console.log(text);
@@ -169,7 +175,9 @@
                 $("#option-container").css("max-height", "");
         }
 
-        loadPage("games.html", document.getElementById("nav-games"));
+        page.loadPage("games");
+
+        //loadPage("settings/settings.html", document.getElementById("nav-games"));
     </script>
 </body>
 
