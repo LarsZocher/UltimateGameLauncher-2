@@ -5,6 +5,8 @@ A launcher that manages all your games and accounts from other platforms like St
 
 ## Current Features
 
+**NOTE:** This program is very early in development, so feel free to give feedback.
+
 ### Games
 - List of all Steam games
 - Start the games with the selected user
@@ -30,7 +32,7 @@ A launcher that manages all your games and accounts from other platforms like St
 
 - [Download](http://bit.ly/2NfFaLI)
 - Open the installer
-- IMPORTANT: You will warning from Windows because UGL has no certificate. So don't need to worry. More info [here](https://www.digicert.com/blog/ms-smartscreen-application-reputation/)
+- IMPORTANT: You will warning from Windows because UGL has no certificate. No need to worry. More info [here](https://www.digicert.com/blog/ms-smartscreen-application-reputation/)
 - Click here
 
 <img align="left" width="300" height="250" src="https://ugl.seemslegit.me/screenshots/3.png">
