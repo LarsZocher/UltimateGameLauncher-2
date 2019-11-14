@@ -70,6 +70,7 @@
         updateTitle();
         $("#create-user").css("display", "none");
         $("#delete-user").css("display", "block").click(function() {
+            console.log("[Steam] Deleted user");
             var users = app_getUsers();
             var index = users.indexOf(user);
             if(index > -1)
@@ -146,6 +147,8 @@
             var users = app_getUsers();
             users.push(window.users.currentUser);
 
+            console.log("[Steam] Added user");
+
             app_saveData();
             refreshPage();
         });
@@ -161,7 +164,7 @@
     }
 
     function refreshPage(){
-        loadPage("userTypes/steam_addUser.html", document.getElementById("nav-settings"), {force: true});
+        window.page.loadPage("settings-users", {force: true});
     }
 
     function isEmpty(str){

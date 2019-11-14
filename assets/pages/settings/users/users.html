@@ -51,8 +51,6 @@
         }
     }
 
-    loadUsers();
-
     (function(){
         $("#u-add-steam").on("click", (event)=>{
             window.page.loadPageSync("settings-users-steam", {tag: "newSteam"});
@@ -64,5 +62,9 @@
         });
 
         $("#menu-ver").text("Version: "+electron.remote.app.getVersion());
+
+        setTimeout(function(){
+            loadUsers();
+        }, 0);
     })();
 </script>
