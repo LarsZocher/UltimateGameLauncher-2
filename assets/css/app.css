@@ -167,6 +167,74 @@ div {
     background: rgba(255, 255, 255, 0.062);
     color: #cecece; }
 
+.onoffswitch {
+  position: relative;
+  width: 40px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  float: none; }
+
+.onoffswitch-checkbox {
+  display: none; }
+
+.onoffswitch-label {
+  display: block;
+  overflow: hidden;
+  cursor: pointer;
+  border-radius: 50px; }
+
+.onoffswitch-inner {
+  display: block;
+  width: 200%;
+  margin-left: -100%;
+  transition: margin 0.3s ease-in 0s; }
+
+.onoffswitch-inner:before, .onoffswitch-inner:after {
+  display: block;
+  float: left;
+  width: 50%;
+  height: 22px;
+  padding: 0;
+  line-height: 0px;
+  font-size: 0px;
+  color: white;
+  font-family: Trebuchet, Arial, sans-serif;
+  font-weight: bold;
+  box-sizing: border-box; }
+
+.onoffswitch-inner:before {
+  content: "";
+  padding-left: 5px;
+  background-color: #006faf;
+  color: #FFFFFF; }
+
+.onoffswitch-inner:after {
+  content: "";
+  padding-right: 5px;
+  background-color: #4e4e4e;
+  color: #666666;
+  text-align: right; }
+
+.onoffswitch-switch {
+  display: block;
+  width: 22px;
+  margin: 0px;
+  background: #e6e6e6;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 17px;
+  border: 2px solid #4e4e4e;
+  border-radius: 50px;
+  transition: all 0.3s ease-in 0s; }
+
+.onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-inner {
+  margin-left: 0; }
+
+.onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-switch {
+  right: 0px; }
+
 #games-list {
   position: relative;
   width: 300px;
@@ -694,11 +762,14 @@ div {
     color: #ebebeb;
     font-weight: bold;
     font-size: 17px;
+    line-height: 19px;
     margin: 10px; }
   .s-container .s-content {
-    margin: 10px; }
+    margin: 12px; }
     .s-container .s-content .s-info {
       color: #a7a7a7; }
+    .s-container .s-content .onoffswitch {
+      margin-bottom: 5px; }
 
 .s-container-area .s-container input[type=text] {
   color: #FFF;
@@ -759,6 +830,23 @@ div {
   background: #770000;
   color: #000; }
 
+.s-button {
+  float: right;
+  background: #006faf;
+  color: #FFF;
+  padding: 0 20px 0 20px;
+  min-width: 100px;
+  font-size: 18px;
+  line-height: 40px;
+  text-align: center;
+  border-radius: 1px;
+  transition: all .15s ease;
+  font-family: 'Roboto', sans-serif;
+  font-weight: 500; }
+
+.s-button:hover {
+  background: #0084d1; }
+
 .menu-content-container {
   width: 100%;
   height: 100vh;
@@ -776,8 +864,7 @@ div {
     top: 30px;
     color: #e4e4e4;
     border-bottom: 1px solid #7c7c7c;
-    padding-bottom: 5px;
-    width: 140px;
+    width: 40px;
     height: 35px;
     white-space: nowrap;
     text-align: center;
@@ -798,7 +885,7 @@ div {
     width: calc(100% - 20px); }
   .menu-content .menu-side .menu-list-title {
     color: #FFF;
-    font-size: 20px;
+    font-size: 16px;
     line-height: 22px;
     font-weight: bold;
     margin: 20px 0 10px 30px;
@@ -917,6 +1004,71 @@ div {
           line-height: 12px; }
     .settings-container .settings-list .setting-container:hover {
       background: #363636; }
+
+#s-u-content-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 27px; }
+
+#s-u-icon {
+  float: left;
+  margin-right: 20px; }
+  #s-u-icon i {
+    font-size: 40px;
+    color: #006faf; }
+
+#s-u-content {
+  width: 100%;
+  display: grid;
+  position: relative; }
+
+#s-u-title {
+  color: white;
+  font-size: 15px;
+  margin-bottom: 5px;
+  position: absolute;
+  top: 5px;
+  left: 10px;
+  text-transform: uppercase;
+  font-weight: bold; }
+
+#s-u-status {
+  color: #dbdbdb;
+  font-size: 20px;
+  margin-bottom: 5px; }
+
+#s-u-speed {
+  width: 100%;
+  position: relative;
+  margin-top: 5px; }
+  #s-u-speed #s-u-downloaded {
+    color: #dbdbdb;
+    font-size: 15px;
+    margin-top: 7px; }
+  #s-u-speed #s-u-d-speed {
+    color: #dbdbdb;
+    font-size: 15px;
+    margin: 7px 0 0 10px;
+    position: absolute;
+    right: 0; }
+
+#s-u-bar-container {
+  width: 100%;
+  position: relative; }
+  #s-u-bar-container #s-u-bar-back {
+    position: absolute;
+    width: 100%;
+    height: 1px;
+    top: 2px;
+    background: #dbdbdb; }
+  #s-u-bar-container #s-u-bar-progress {
+    position: absolute;
+    width: 50%;
+    height: 5px;
+    background: #0c70ce;
+    z-index: 10; }
 
 .col-1 {
   width: 8.33%; }

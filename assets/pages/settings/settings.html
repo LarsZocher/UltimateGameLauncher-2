@@ -16,7 +16,7 @@
                 <span>Add, change or remove users</span>
             </div>
         </div>
-        <div class="setting-container">
+        <div class="setting-container" onclick="window.page.loadPage('settings-update')">
             <i class="fas fa-sync"></i>
             <div class="setting-content">
                 <h3>Updates</h3>
@@ -30,6 +30,7 @@
 <script>
     (function(){
         window.page.registerPage("settings-users", "settings/users/users.html", "#content");
+        window.page.registerPage("settings-update", "settings/update/update.html", "#content");
         $("#menu-ver").text("Version: "+electron.remote.app.getVersion());
     })();
 </script>

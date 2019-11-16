@@ -53,14 +53,19 @@
         color: rgb(235, 235, 235);
         font-weight: bold;
         font-size: 17px;
+        line-height: 19px;
         margin: 10px;
     }
 
     .s-content {
-        margin: 10px;
+        margin: 12px;
 
         .s-info {
             color: rgb(167, 167, 167);
+        }
+
+        .onoffswitch {
+            margin-bottom: 5px;
         }
     }
 }
@@ -129,4 +134,23 @@
 .s-delete:hover{
     background: rgb(119, 0, 0);
     color: #000;
+}
+
+.s-button {
+    float: right;
+    background: #006faf;
+    color: #FFF;
+    padding: 0 20px 0 20px;
+    min-width: 100px;
+    font-size: 18px;
+    line-height: 40px;
+    text-align: center;
+    border-radius: 1px;
+    transition: all .15s ease;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 500;
+}
+
+.s-button:hover{
+    background: #0084d1;
 }

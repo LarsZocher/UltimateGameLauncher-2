@@ -1,6 +1,6 @@
 {
   "name": "ugl",
-  "version": "0.2.12",
+  "version": "0.2.14",
   "description": "UltimateGameLauncher",
   "main": "assets/js/main.js",
   "scripts": {

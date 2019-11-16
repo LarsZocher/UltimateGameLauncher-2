@@ -9,15 +9,21 @@ let mainWindow;
 let addWindow;
 let updateWindow;
 
+var updateFromSettings = false;
+
 const sendStatusToWindow = (text) => {
-    if(updateWindow) {
+    if(updateWindow && !updateFromSettings) {
         updateWindow.webContents.send("message", text);
+    }else{
+        mainWindow.webContents.send("message", text);
     }
 }
 
 const updateStatus = (percent, speed, downloaded) => {
-    if(updateWindow) {
+    if(updateWindow && !updateFromSettings) {
         updateWindow.webContents.send("u-update", percent, speed, downloaded);
+    }else{
+        mainWindow.webContents.send("u-update", percent, speed, downloaded);
     }
 }
 
@@ -29,25 +35,49 @@ autoUpdater.on('update-available', (info) => {
 })
 autoUpdater.on('update-not-available', (info) => {
     sendStatusToWindow('Update not available.');
-    updateFinished();
+    if(!updateFromSettings)
+        updateFinished();
 })
 autoUpdater.on('error', (err) => {
     sendStatusToWindow('Error in auto-updater. ' + err);
-    setTimeout(()=>{
-        updateFinished();
-    }, 1000);
+    if(!updateFromSettings)
+        setTimeout(()=>{
+            updateFinished();
+        }, 1000);
 })
 autoUpdater.on('download-progress', (progressObj) => {
-    let log_message = "Download speed: " + progressObj.bytesPerSecond/1000;
+    let log_message = "Download speed: " + formatSizeUnits(progressObj.bytesPerSecond);
     log_message = log_message + ' - Downloaded ' + progressObj.percent + '%';
     log_message = log_message + ' (' + progressObj.transferred + "/" + progressObj.total + ')';
     sendStatusToWindow("Downloading update...");
-    updateStatus(progressObj.percent, progressObj.bytesPerSecond/1000, progressObj.transferred + "/" + progressObj.total);
+    updateStatus(progressObj.percent, formatSizeUnits(progressObj.bytesPerSecond)+"/s", formatSizeUnits(progressObj.transferred) + "/" + formatSizeUnits(progressObj.total));
 })
 autoUpdater.on('update-downloaded', (info) => {
     sendStatusToWindow('Update downloaded');
+    if(!updateFromSettings)
+        autoUpdater.quitAndInstall();
+    else
+        mainWindow.webContents.send("u-downloaded");
+});
+
+ipcMain.on('check-for-updates', function(e){
+    updateFromSettings = true;
+    autoUpdater.checkForUpdates();
+});
+
+ipcMain.on('apply-update', function(e){
     autoUpdater.quitAndInstall();
 });
+
+function formatSizeUnits(bytes){
+    if      (bytes >= 1073741824) { bytes = (bytes / 1073741824).toFixed(2) + " GB"; }
+    else if (bytes >= 1048576)    { bytes = (bytes / 1048576).toFixed(2) + " MB"; }
+    else if (bytes >= 1024)       { bytes = (bytes / 1024).toFixed(2) + " KB"; }
+    else if (bytes > 1)           { bytes = bytes + " bytes"; }
+    else if (bytes == 1)          { bytes = bytes + " byte"; }
+    else                          { bytes = "0 bytes"; }
+    return bytes;
+}
 
 function updateFinished(){
     createMainWindow();
@@ -110,7 +140,7 @@ function createUpdateWindow(){
 }
 
 app.on('ready', function()  {
-    if(!app.isPackaged){
+    if(!app.isPackaged || true){
         createMainWindow();
     }else{
         createUpdateWindow();
