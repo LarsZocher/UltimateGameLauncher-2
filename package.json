@@ -18,9 +18,11 @@
   "homepage": "https://ugl.seemslegit.me",
   "license": "MIT",
   "dependencies": {
+    "electron-updater": "^4.1.2",
+    "react": "^16.12.0",
+    "react-dom": "^16.12.0",
     "steamauth": "^0.1.5",
-    "winreg": "^1.2.4",
-    "electron-updater": "^4.1.2"
+    "winreg": "^1.2.4"
   },
   "devDependencies": {
     "electron": "^5.0.3",
@@ -43,7 +45,7 @@
       "uninstallerIcon": "build/icon2.ico",
       "uninstallDisplayName": "Ultimate Game Launcher"
     },
-    "win":{
+    "win": {
       "target": "nsis",
       "icon": "build/icon2.ico"
     },

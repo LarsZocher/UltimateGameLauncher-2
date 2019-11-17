@@ -45,6 +45,7 @@
             <div class="s-info">Search automatically for updates and downloads them. Update gets installed on next startup.</div>
         </div>
     </div>
+    <div id="react-test"></div>
 </div>
 <script>
     (function(){
@@ -81,6 +82,8 @@
         $("#check-f-u").click(function(){
             config.set("settings.update.checkForUpdates", $(this).prop('checked'));
             config.saveData();
-        }).prop('checked', config.data.settings.update.checkForUpdates).prop('checked', config.data.settings.update.checkForUpdates);
+        }).prop('checked', config.data.settings.update.checkForUpdates);
     })();
 </script>
+
+<script src="../../../js/react.jsx"></script>
