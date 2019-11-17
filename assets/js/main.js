@@ -5,11 +5,17 @@ const {autoUpdater} = require("electron-updater");
 
 const { app, BrowserWindow, Menu, ipcMain} = electron;
 
+const config = require("../js/config");
+
 let mainWindow;
 let addWindow;
 let updateWindow;
 
 var updateFromSettings = false;
+
+config.setDefault("settings.update.updatesOnStartup", true);
+config.setDefault("settings.update.checkForUpdates", true);
+config.saveData();
 
 const sendStatusToWindow = (text) => {
     if(updateWindow && !updateFromSettings) {
@@ -140,7 +146,7 @@ function createUpdateWindow(){
 }
 
 app.on('ready', function()  {
-    if(!app.isPackaged || true){
+    if(!app.isPackaged || !config.data.settings.update.updatesOnStartup){
         createMainWindow();
     }else{
         createUpdateWindow();

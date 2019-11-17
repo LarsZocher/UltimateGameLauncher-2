@@ -49,6 +49,9 @@
 <script>
     (function(){
         var config = require("../js/config");
+
+        console.log(config);
+
         ipcRenderer.on("message", function(event, text){
             $("#s-u-status").text(text);
         });
@@ -70,9 +73,6 @@
             console.log("check");
             ipcRenderer.send("check-for-updates");
         });
-
-        config.setDefault("settings.update.updatesOnStartup", true);
-        config.setDefault("settings.update.checkForUpdates", true);
 
         $("#updates-o-s").click(function(){
             config.set("settings.update.updatesOnStartup", $(this).prop('checked'));

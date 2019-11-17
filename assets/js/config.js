@@ -1,9 +1,15 @@
 var data = {};
 var name = "config.json";
+var isLoaded = false;
 
-const {app} = require('electron').remote;
-const fs = require('fs');
-const path = require('path');
+var fs = require('fs');
+var path = require('path');
+var electron = require('electron');
+var app;
+if(electron.remote)
+    app = electron.remote.app;
+else
+    app = electron.app;
 
 function loadData(){
     var config = path.join(app.getPath("userData"), name);
@@ -12,6 +18,7 @@ function loadData(){
         let rawdata = fs.readFileSync(config);
         data = JSON.parse(rawdata);
     }
+    isLoaded = true;
 }
 
 function saveData(){
@@ -39,11 +46,12 @@ function setDefault(path, obj){
     for (var i = 0; i<parts.length; i++) {
         var part = parts[i];
         if(!isset(currentPath[part])){
+            if(i==parts.length-1){
+                if(!isset(currentPath[part]))
+                    currentPath[part] = obj;
+                return;
+            }
             currentPath[part] = {};
-        }
-        if(i==parts.length-1){
-            if(!isset(currentPath[part]))
-                currentPath[part] = obj;
         }
         currentPath = currentPath[part];
     }
@@ -61,7 +69,8 @@ function isDefined(object){
     return (typeof object !== 'undefined');
 }
 
-loadData();
+if(!isLoaded)
+    loadData();
 
 module.exports = {
     loadData,
