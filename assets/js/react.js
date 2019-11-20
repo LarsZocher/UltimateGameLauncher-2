@@ -1,7 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import Test from '../js/components/Test';
 
 console.log("test");
 
-ReactDOM.render(<h1>Hello, world!</h1>, document.getElementById('content'));
+ReactDOM.render(Test, document.getElementById('content'));
 console.log("test");

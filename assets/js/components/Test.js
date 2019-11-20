@@ -1,9 +1,12 @@
 import React, { Component } from "react";
+const e = React.createElement;
 
 export class Test extends Component {
     render() {
         return (
-            <div style="color: #FFF;">Hey was geht</div>
+            'button',
+            { onClick: () => this.setState({ liked: true }) },
+            'Like'
         );
     }
 }

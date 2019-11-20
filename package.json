@@ -1,6 +1,6 @@
 {
   "name": "ugl",
-  "version": "0.2.14",
+  "version": "0.2.16",
   "description": "UltimateGameLauncher",
   "main": "assets/js/main.js",
   "scripts": {
@@ -12,7 +12,9 @@
     "package-linux": "electron-packager . electron-tutorial-app --overwrite --asar=true --platform=linux --arch=x64 --icon=assets/icons/png/icon.png --prune=true --out=release-builds",
     "pack": "electron-builder --dir",
     "dist": "electron-builder --win",
-    "dist-win": "electron-builder --win -p always"
+    "dist-win": "electron-builder --win -p always",
+    "r-start": "react-scripts start",
+    "r-eject": "react-scripts eject"
   },
   "author": "Lars Zocher",
   "homepage": "https://ugl.seemslegit.me",
@@ -21,6 +23,7 @@
     "electron-updater": "^4.1.2",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
+    "react-scripts": "^3.2.0",
     "steamauth": "^0.1.5",
     "winreg": "^1.2.4"
   },
