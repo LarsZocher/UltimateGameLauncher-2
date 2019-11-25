@@ -23,7 +23,12 @@ function loadData(){
 
 function saveData(){
     var config = path.join(app.getPath("userData"), name);
-    fs.writeFileSync(config, JSON.stringify(data, null, 2));
+    fs.writeFile(config, JSON.stringify(data, null, 2), function(err) {
+        if(err){
+            console.log(err);
+        }
+        console.log(name+" was saved!");
+    });
 }
 
 function set(path, obj){
