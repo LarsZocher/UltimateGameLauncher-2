@@ -1,0 +1,190 @@
+<h1 class="s-headline" id="s-title">Add Steam user</h1>
+
+<div class="s-head-container">
+    <h2 class="s-headline-2">General</h2>
+    <h3 class="s-headline-3">Minimum information needed</h3>
+</div>
+<div class="s-container-area">
+    <div class="s-container">
+        <div class="s-name">Username</div>
+        <div class="s-content">
+            <input type="text" name="username" id="s-username">
+        </div>
+    </div>
+    <div class="s-container">
+        <div class="s-name">Steam64-ID</div>
+        <div class="s-content">
+            <input type="text" name="steamid" id="s-steamid">
+        </div>
+    </div>
+</div>
+<div class="s-head-container">
+    <h2 class="s-headline-2">Authentication</h2>
+    <h3 class="s-headline-3">Required for generating Steam Guard codes and getting trade confirmations</h3>
+</div>
+<div class="s-container-area">
+    <div class="s-container" id="s-secret-container">
+        <div class="s-name">Encryption Secret</div>
+        <div class="s-content">
+            <input type="password" name="secret" id="s-secret">
+            <div class="s-info">Your personal code which is used to encrypt the data below. This secret is required when you want to use Steam Guard features.</div>
+        </div>
+    </div>
+    <div class="s-container">
+        <div class="s-name">Shared-Secret</div>
+        <div class="s-content">
+            <input type="text" name="steamsecret" id="s-steamsecret">
+            <div class="s-info">Required for trade confirmations and generating Steam Guard codes.</div>
+        </div>
+    </div>
+    <div class="s-container">
+        <div class="s-name">Password</div>
+        <div class="s-content">
+            <input type="text" name="password" id="s-password">
+            <div class="s-info">Required for trade confirmations.</div>
+        </div>
+    </div>
+    <div class="s-container">
+        <div class="s-name">Device-ID</div>
+        <div class="s-content">
+            <input type="text" name="deviceid" id="s-deviceid">
+            <div class="s-info">Required for trade confirmations.</div>
+        </div>
+    </div>
+    <div class="s-container">
+        <div class="s-name">Identity-Secret</div>
+        <div class="s-content">
+            <input type="text" name="identitysecret" id="s-identitysecret">
+            <div class="s-info">Required for trade confirmations.</div>
+        </div>
+    </div>
+</div>
+<div class="s-save" id="create-user">ADD</div>
+<div class="s-delete" id="delete-user">DELETE</div>
+
+<script>
+    window.users = {};
+    window.users.editSteamUser = function(user){
+        window.users.currentUser = user;
+
+        updateTitle();
+        $("#create-user").css("display", "none");
+        $("#delete-user").css("display", "block").click(function() {
+            console.log("[Steam] Deleted user");
+            var users = app_getUsers();
+            var index = users.indexOf(user);
+            if(index > -1)
+                users.splice(index, 1);
+            app_saveData();
+            refreshPage();
+        });
+        $("#s-username").val(user.name).on("change", function(){
+            if($(this).val().length!=0){
+                user.name = $(this).val();
+                app_saveData();
+                updateTitle();
+            }
+        });
+        $("#s-steamid").val(user.steam64id).on("change", function(){
+            if($(this).val().length!=0){
+                user.steam64id = $(this).val();
+                app_saveData();
+            }
+        });
+
+        window.users.hasAuthSet = false;
+
+        loadDataEncrypted("#s-steamsecret", "shared_secret");
+        loadDataEncrypted("#s-password", "password");
+        loadDataEncrypted("#s-deviceid", "deviceid");
+        loadDataEncrypted("#s-identitysecret", "identity_secret");
+
+        if(window.users.hasAuthSet)
+            $("#s-secret-container .s-info").text("Enter your secret to decrypt and change the data below.");
+    }
+
+    function loadDataEncrypted(id, key){
+        $(id).prop("disabled", true);
+        if(!window.users.currentUser.auth)
+            window.users.currentUser.auth = {};
+        if(isset(window.users.currentUser.auth[key])){
+            $(id).val(window.users.currentUser.auth[key]);
+            window.users.hasAuthSet = true;
+        }
+    }
+
+    function loadData(id, key){
+        $(id).prop("disabled", false);
+        if(window.users.currentUser.auth && isset(window.users.currentUser.auth[key]))
+            $(id).val(decrypt(window.users.currentUser.auth[key], window.users.secret));
+        addAuthListener(id, key);
+    }
+
+    function addAuthListener(id, key){
+        $(id).on("change", function(){
+            if($(this).val().length!=0){
+                var val = encrypt($(this).val(), window.users.secret);
+                window.users.currentUser.auth[key] = val;
+                app_saveData();
+            }else{
+                window.users.currentUser.auth[key] = null;
+                app_saveData();
+            }
+        });
+    }
+
+    window.users.newUser = function(){
+        $("#create-user").click(function(){
+            var name = $("#s-username").val();
+            var steamid = $("#s-steamid").val();
+            if(isEmpty(name) || isEmpty(steamid)){
+                return;
+            }
+
+            window.users.currentUser.name = name;
+            window.users.currentUser.steam64id = steamid;
+
+            var users = app_getUsers();
+            users.push(window.users.currentUser);
+
+            console.log("[Steam] Added user");
+
+            app_saveData();
+            refreshPage();
+        });
+
+        loadDataEncrypted("#s-steamsecret", "shared_secret");
+        loadDataEncrypted("#s-password", "password");
+        loadDataEncrypted("#s-deviceid", "deviceid");
+        loadDataEncrypted("#s-identitysecret", "identity_secret");
+    }
+
+    function updateTitle(){
+        $("#s-title").text(window.users.currentUser.name);
+    }
+
+    function refreshPage(){
+        window.page.loadPage("settings-users", {force: true});
+    }
+
+    function isEmpty(str){
+        return str === null || str.match(/^ *$/) !== null ;
+    }
+
+    (function(){
+        window.users.currentUser = {};
+        $("#delete-user").css("display", "none");
+
+        $("#s-secret").on("change", function(){
+            if($(this).val().length!=0){
+                var secret = $(this).val();
+                window.users.secret = secret;
+
+                loadData("#s-steamsecret", "shared_secret");
+                loadData("#s-password", "password");
+                loadData("#s-deviceid", "deviceid");
+                loadData("#s-identitysecret", "identity_secret");
+            }
+        });
+    })();
+</script>

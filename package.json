@@ -1,9 +1,11 @@
 {
   "name": "ugl",
-  "version": "0.2.16",
+  "version": "0.2.20",
   "description": "UltimateGameLauncher",
-  "main": "assets/js/main.js",
+  "main": "app/js/main.js",
   "scripts": {
+    "startg": "gulp start",
+    "startgw": "gulp watch",
     "start": "electron .",
     "scss": "npm run scss-dev && node-sass --importer=node_modules/node-sass-tilde-importer --watch assets/scss -o assets/css compressed",
     "scss-dev": "node-sass --importer=node_modules/node-sass-tilde-importer assets/scss -o assets/css compressed",
@@ -12,27 +14,34 @@
     "package-linux": "electron-packager . electron-tutorial-app --overwrite --asar=true --platform=linux --arch=x64 --icon=assets/icons/png/icon.png --prune=true --out=release-builds",
     "pack": "electron-builder --dir",
     "dist": "electron-builder --win",
-    "dist-win": "electron-builder --win -p always",
-    "r-start": "react-scripts start",
-    "r-eject": "react-scripts eject"
+    "dist-win": "electron-builder --win -p always"
   },
   "author": "Lars Zocher",
   "homepage": "https://ugl.seemslegit.me",
   "license": "MIT",
   "dependencies": {
+    "@babel/plugin-proposal-class-properties": "^7.7.4",
     "electron-updater": "^4.1.2",
-    "react": "^16.12.0",
-    "react-dom": "^16.12.0",
-    "react-scripts": "^3.2.0",
     "steamauth": "^0.1.5",
     "winreg": "^1.2.4"
   },
   "devDependencies": {
+    "@babel/core": "^7.7.4",
+    "@babel/preset-env": "^7.7.4",
+    "@babel/preset-react": "^7.7.4",
     "electron": "^5.0.3",
     "electron-builder": "^21.2.0",
+    "electron-connect": "^0.6.3",
+    "electron-packager": "^13.1.1",
+    "gulp": "^4.0.2",
+    "gulp-babel": "^8.0.0",
+    "gulp-clean-css": "^4.2.0",
+    "gulp-concat": "^2.6.1",
+    "gulp-livereload": "^4.0.2",
     "node-sass": "^4.12.0",
     "node-sass-tilde-importer": "^1.0.2",
-    "electron-packager": "^13.1.1"
+    "react": "^16.12.0",
+    "react-dom": "^16.12.0"
   },
   "build": {
     "publish": [
