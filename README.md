@@ -1,7 +1,7 @@
 # UltimateGameLauncher-2
 A launcher that manages all your games and accounts from other platforms like Steam, Battle.net, Origin...
 
-<img align="center" width="80%" src="https://ugl.seemslegit.me/screenshots/1.png">
+<img align="center" width="80%" src="https://ugl.seemslegit.me/screenshots/1.png?t=186485461641">
 
 ## Current Features
 
@@ -35,8 +35,8 @@ A launcher that manages all your games and accounts from other platforms like St
 - IMPORTANT: You will warning from Windows because UGL has no certificate. No need to worry. More info [here](https://www.digicert.com/blog/ms-smartscreen-application-reputation/)
 - Click here
 
-<img align="left" width="300" height="250" src="https://ugl.seemslegit.me/screenshots/3.png">
-<img align="left" width="300" height="250" src="https://ugl.seemslegit.me/screenshots/4.png">
+<img align="left" width="300" height="250" src="https://ugl.seemslegit.me/screenshots/3.png?t=186485461641">
+<img align="left" width="300" height="250" src="https://ugl.seemslegit.me/screenshots/4.png?t=186485461641">
 
 <img align="center" src="https://ugl.seemslegit.me/screenshots/2.png">
 
