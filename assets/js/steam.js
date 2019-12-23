@@ -4,7 +4,7 @@ function getAppsById(cb, ids, force = false){
     var toRequest = [];
     var inCache = [];
     if(!force){
-        for(id of ids){
+        for(var id of ids){
             if(!(id in apps_cache)){
                 toRequest.push(id);
             }else
@@ -16,7 +16,7 @@ function getAppsById(cb, ids, force = false){
 
     if(toRequest.length == 0){
         var result = [];
-        for(id of ids){
+        for(var id of ids){
             result.push(apps_cache[id]);
         }
         cb(result);
@@ -27,10 +27,10 @@ function getAppsById(cb, ids, force = false){
     xmlhttp.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
             var result = JSON.parse(this.responseText);
-            for(app of result){
+            for(var app of result){
                 apps_cache[app.appId] = app;
             }
-            for(id of inCache){
+            for(var id of inCache){
                 result.push(apps_cache[id]);
             }
             cb(result);
@@ -250,7 +250,7 @@ async function getSteamUserInfo(steamId){
         xmlhttp.open("GET", "https://steamcommunity.com/profiles/"+steamId+"?xml=1", true);
         xmlhttp.send();
     });
-    return await p;
+    return p;
 }
 
 async function timeout(time){
