@@ -1,6 +1,6 @@
 {
   "name": "ugl",
-  "version": "0.2.20",
+  "version": "0.3.0",
   "description": "UltimateGameLauncher",
   "main": "app/js/main.js",
   "scripts": {
@@ -14,6 +14,7 @@
     "package-linux": "electron-packager . electron-tutorial-app --overwrite --asar=true --platform=linux --arch=x64 --icon=assets/icons/png/icon.png --prune=true --out=release-builds",
     "pack": "electron-builder --dir",
     "dist": "electron-builder --win",
+    "gulp-dist": "gulp release",
     "dist-win": "electron-builder --win -p always"
   },
   "author": "Lars Zocher",
@@ -21,12 +22,16 @@
   "license": "MIT",
   "dependencies": {
     "@babel/plugin-proposal-class-properties": "^7.7.4",
+    "@babel/runtime": "^7.7.4",
     "electron-updater": "^4.1.2",
     "steamauth": "^0.1.5",
-    "winreg": "^1.2.4"
+    "winreg": "^1.2.4",
+    "react": "^16.12.0",
+    "react-dom": "^16.12.0"
   },
   "devDependencies": {
     "@babel/core": "^7.7.4",
+    "@babel/plugin-transform-runtime": "^7.7.4",
     "@babel/preset-env": "^7.7.4",
     "@babel/preset-react": "^7.7.4",
     "electron": "^5.0.3",
@@ -39,9 +44,7 @@
     "gulp-concat": "^2.6.1",
     "gulp-livereload": "^4.0.2",
     "node-sass": "^4.12.0",
-    "node-sass-tilde-importer": "^1.0.2",
-    "react": "^16.12.0",
-    "react-dom": "^16.12.0"
+    "node-sass-tilde-importer": "^1.0.2"
   },
   "build": {
     "publish": [

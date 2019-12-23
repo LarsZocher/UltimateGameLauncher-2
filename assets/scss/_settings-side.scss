@@ -44,7 +44,7 @@
         }
 
         .menu-list-container {
-            margin: 70px 0 0 0;
+            margin: 80px 0 0 0;
             width: calc(100% - 20px);
         }
 
@@ -124,6 +124,13 @@
 }
 
 #menu-ver{
+    position: absolute;
+    color: rgb(172, 172, 172);
+    font-size: 15px;
+    left: 30px;
+    bottom: 50px;
+}
+#menu-ver-name{
     position: absolute;
     color: rgb(172, 172, 172);
     font-size: 15px;

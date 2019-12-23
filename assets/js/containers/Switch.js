@@ -13,13 +13,14 @@ export default class Switch extends React.Component {
     }
 
     toggleButton = () => {
+        //console.trace();
         this.setState({checked: !this.state.checked});
     }
 
     render() {
         console.log(this.state.checked);
         return  (
-            <div className="onoffswitch" onClick={this.toggleButton}>
+            <div className="onoffswitch">
                 <input type="checkbox" name="onoffswitch" className="onoffswitch-checkbox" checked={this.state.checked} onChange={this.toggleButton} id={this.props.id}/>
                 <label className="onoffswitch-label" htmlFor={this.props.id}>
                     <span className="onoffswitch-inner"></span>

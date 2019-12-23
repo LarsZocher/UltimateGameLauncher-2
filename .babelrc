@@ -2,7 +2,12 @@
     "plugins": [
         [
             "@babel/plugin-proposal-class-properties", { "loose": true }
-        ]
+        ],
+        ["@babel/plugin-transform-runtime", { "regenerator": true } ]
     ],
-    "presets": ["@babel/env", "@babel/react"]
+    "presets": [[
+        "@babel/preset-env", {
+          "useBuiltIns": "entry"
+        }],
+        "@babel/react"]
 }

@@ -1,5 +1,9 @@
 "use strict";
 
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+
+var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
+
 var apps_cache = {};
 
 function getAppsById(cb, ids) {
@@ -172,14 +176,14 @@ function openApp(appid) {
       exec,
       _args = arguments;
 
-  return regeneratorRuntime.async(function openApp$(_context) {
+  return _regenerator["default"].async(function openApp$(_context) {
     while (1) {
       switch (_context.prev = _context.next) {
         case 0:
           user = _args.length > 1 && _args[1] !== undefined ? _args[1] : null;
           console.log("[Steam] Opening app " + appid + " with user '" + user + "'");
           _context.next = 4;
-          return regeneratorRuntime.awrap(getCurrentUser());
+          return _regenerator["default"].awrap(getCurrentUser());
 
         case 4:
           cu = _context.sent;
@@ -191,11 +195,11 @@ function openApp(appid) {
           }
 
           _context.next = 9;
-          return regeneratorRuntime.awrap(changeUser(user, false));
+          return _regenerator["default"].awrap(changeUser(user, false));
 
         case 9:
           _context.next = 11;
-          return regeneratorRuntime.awrap(getSteamExe());
+          return _regenerator["default"].awrap(getSteamExe());
 
         case 11:
           _context.t0 = _context.sent;
@@ -225,7 +229,7 @@ function openApp(appid) {
 function isRunning() {
   var executablePath, util, exec, _ref, stdout, stderr;
 
-  return regeneratorRuntime.async(function isRunning$(_context2) {
+  return _regenerator["default"].async(function isRunning$(_context2) {
     while (1) {
       switch (_context2.prev = _context2.next) {
         case 0:
@@ -233,7 +237,7 @@ function isRunning() {
           util = require('util');
           exec = util.promisify(require('child_process').exec);
           _context2.next = 5;
-          return regeneratorRuntime.awrap(exec(executablePath));
+          return _regenerator["default"].awrap(exec(executablePath));
 
         case 5:
           _ref = _context2.sent;
@@ -251,7 +255,7 @@ function isRunning() {
 
 function isLoggedIn() {
   var Registry, regKey, p;
-  return regeneratorRuntime.async(function isLoggedIn$(_context3) {
+  return _regenerator["default"].async(function isLoggedIn$(_context3) {
     while (1) {
       switch (_context3.prev = _context3.next) {
         case 0:
@@ -269,7 +273,7 @@ function isLoggedIn() {
             });
           });
           _context3.next = 4;
-          return regeneratorRuntime.awrap(p);
+          return _regenerator["default"].awrap(p);
 
         case 4:
           return _context3.abrupt("return", _context3.sent);
@@ -284,7 +288,7 @@ function isLoggedIn() {
 
 function getLastUser() {
   var Registry, regKey, p;
-  return regeneratorRuntime.async(function getLastUser$(_context4) {
+  return _regenerator["default"].async(function getLastUser$(_context4) {
     while (1) {
       switch (_context4.prev = _context4.next) {
         case 0:
@@ -302,7 +306,7 @@ function getLastUser() {
             });
           });
           _context4.next = 4;
-          return regeneratorRuntime.awrap(p);
+          return _regenerator["default"].awrap(p);
 
         case 4:
           return _context4.abrupt("return", _context4.sent);
@@ -317,7 +321,7 @@ function getLastUser() {
 
 function getSteamPath() {
   var Registry, regKey, p;
-  return regeneratorRuntime.async(function getSteamPath$(_context5) {
+  return _regenerator["default"].async(function getSteamPath$(_context5) {
     while (1) {
       switch (_context5.prev = _context5.next) {
         case 0:
@@ -335,7 +339,7 @@ function getSteamPath() {
             });
           });
           _context5.next = 4;
-          return regeneratorRuntime.awrap(p);
+          return _regenerator["default"].awrap(p);
 
         case 4:
           return _context5.abrupt("return", _context5.sent);
@@ -350,7 +354,7 @@ function getSteamPath() {
 
 function getSteamExe() {
   var Registry, regKey, p;
-  return regeneratorRuntime.async(function getSteamExe$(_context6) {
+  return _regenerator["default"].async(function getSteamExe$(_context6) {
     while (1) {
       switch (_context6.prev = _context6.next) {
         case 0:
@@ -368,7 +372,7 @@ function getSteamExe() {
             });
           });
           _context6.next = 4;
-          return regeneratorRuntime.awrap(p);
+          return _regenerator["default"].awrap(p);
 
         case 4:
           return _context6.abrupt("return", _context6.sent);
@@ -383,12 +387,12 @@ function getSteamExe() {
 
 function getCurrentUser() {
   var li;
-  return regeneratorRuntime.async(function getCurrentUser$(_context7) {
+  return _regenerator["default"].async(function getCurrentUser$(_context7) {
     while (1) {
       switch (_context7.prev = _context7.next) {
         case 0:
           _context7.next = 2;
-          return regeneratorRuntime.awrap(isLoggedIn());
+          return _regenerator["default"].awrap(isLoggedIn());
 
         case 2:
           li = _context7.sent;
@@ -400,7 +404,7 @@ function getCurrentUser() {
           }
 
           _context7.next = 7;
-          return regeneratorRuntime.awrap(getLastUser());
+          return _regenerator["default"].awrap(getLastUser());
 
         case 7:
           return _context7.abrupt("return", _context7.sent);
@@ -423,14 +427,14 @@ function changeUser(name) {
       regKey,
       p,
       _args8 = arguments;
-  return regeneratorRuntime.async(function changeUser$(_context8) {
+  return _regenerator["default"].async(function changeUser$(_context8) {
     while (1) {
       switch (_context8.prev = _context8.next) {
         case 0:
           openSteam = _args8.length > 1 && _args8[1] !== undefined ? _args8[1] : true;
           console.log("[Steam] Changing user to: " + name);
           _context8.next = 4;
-          return regeneratorRuntime.awrap(isRunning());
+          return _regenerator["default"].awrap(isRunning());
 
         case 4:
           running = _context8.sent;
@@ -442,7 +446,7 @@ function changeUser(name) {
 
           closeSteam();
           _context8.next = 9;
-          return regeneratorRuntime.awrap(timeout(1500));
+          return _regenerator["default"].awrap(timeout(1500));
 
         case 9:
           Registry = require('winreg'), regKey = new Registry({
@@ -459,7 +463,7 @@ function changeUser(name) {
             });
           });
           _context8.next = 13;
-          return regeneratorRuntime.awrap(p);
+          return _regenerator["default"].awrap(p);
 
         case 13:
         case "end":
@@ -482,13 +486,13 @@ function closeSteam() {
 function openSteam() {
   var executablePath, _require3, exec;
 
-  return regeneratorRuntime.async(function openSteam$(_context9) {
+  return _regenerator["default"].async(function openSteam$(_context9) {
     while (1) {
       switch (_context9.prev = _context9.next) {
         case 0:
           console.log("[Steam] Starting steam");
           _context9.next = 3;
-          return regeneratorRuntime.awrap(getSteamExe());
+          return _regenerator["default"].awrap(getSteamExe());
 
         case 3:
           _context9.t0 = _context9.sent;
@@ -509,7 +513,7 @@ var user_cache = {};
 
 function getSteamUserInfo(steamId) {
   var p;
-  return regeneratorRuntime.async(function getSteamUserInfo$(_context10) {
+  return _regenerator["default"].async(function getSteamUserInfo$(_context10) {
     while (1) {
       switch (_context10.prev = _context10.next) {
         case 0:
@@ -543,13 +547,9 @@ function getSteamUserInfo(steamId) {
             xmlhttp.open("GET", "https://steamcommunity.com/profiles/" + steamId + "?xml=1", true);
             xmlhttp.send();
           });
-          _context10.next = 6;
-          return regeneratorRuntime.awrap(p);
+          return _context10.abrupt("return", p);
 
-        case 6:
-          return _context10.abrupt("return", _context10.sent);
-
-        case 7:
+        case 5:
         case "end":
           return _context10.stop();
       }
@@ -559,7 +559,7 @@ function getSteamUserInfo(steamId) {
 
 function timeout(time) {
   var p;
-  return regeneratorRuntime.async(function timeout$(_context11) {
+  return _regenerator["default"].async(function timeout$(_context11) {
     while (1) {
       switch (_context11.prev = _context11.next) {
         case 0:
@@ -569,7 +569,7 @@ function timeout(time) {
             }, time);
           });
           _context11.next = 3;
-          return regeneratorRuntime.awrap(p);
+          return _regenerator["default"].awrap(p);
 
         case 3:
         case "end":

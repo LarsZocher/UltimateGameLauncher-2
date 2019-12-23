@@ -63,6 +63,8 @@
 <div class="s-delete" id="delete-user">DELETE</div>
 
 <script>
+    var steam = require("./types/steam");
+
     window.users = {};
     window.users.editSteamUser = function(user){
         window.users.currentUser = user;
@@ -71,24 +73,24 @@
         $("#create-user").css("display", "none");
         $("#delete-user").css("display", "block").click(function() {
             console.log("[Steam] Deleted user");
-            var users = app_getUsers();
+            var users = steam.getUsers();
             var index = users.indexOf(user);
             if(index > -1)
                 users.splice(index, 1);
-            app_saveData();
+            steam.userConfig.save();
             refreshPage();
         });
         $("#s-username").val(user.name).on("change", function(){
             if($(this).val().length!=0){
                 user.name = $(this).val();
-                app_saveData();
+                steam.userConfig.save();
                 updateTitle();
             }
         });
         $("#s-steamid").val(user.steam64id).on("change", function(){
             if($(this).val().length!=0){
                 user.steam64id = $(this).val();
-                app_saveData();
+                steam.userConfig.save();
             }
         });
 
@@ -144,12 +146,12 @@
             window.users.currentUser.name = name;
             window.users.currentUser.steam64id = steamid;
 
-            var users = app_getUsers();
+            var users = steam.getUsers();
             users.push(window.users.currentUser);
 
             console.log("[Steam] Added user");
 
-            app_saveData();
+            steam.userConfig.save();
             refreshPage();
         });
 

@@ -6,55 +6,83 @@
 </aside>
 <div id="games-main">
     <section id="header-section">
-        <div id="header-img-wrapper">
-            <div id="header-img"></div>
+        <div id="header-img-section">
+            <div id="header-img-wrapper">
+                <div id="header-img-dark"></div>
+                <div id="header-img"></div>
+            </div>
         </div>
-        <h2 id="header-name"></h2>
+        <div class="header-content">
+            <h3 id="header-type"></h3>
+            <div class="header-name-container">
+                <div id="header-name"></div>
+            </div>
+            <div class="header-interact">
+                <ul id="header-interact-menu">
+                    <li>
+                        <div class="launch-btn" onclick="window.startCurrentGame()">Launch</div>
+                    </li>
+                    <li>
+                        <div class="info-item">
+                            <div class="info-title">User</div>
+                            <div class="info-value" id="info-user"></div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="info-item">
+                            <div class="info-title">Playtime</div>
+                            <div class="info-value" id="info-time"></div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="info-item">
+                            <div class="info-title">Developer</div>
+                            <div class="info-value" id="info-dev"></div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div class="header-menu-container">
+                <ul id="header-menu">
+                    <li>
+                        <div class="header-menu-item" id="game-settings">Settings</div>
+                    </li>
+                    <li>
+                        <div class="header-menu-item" id="game-stats">Stats</div>
+                    </li>
+                    <li>
+                        <div class="header-menu-item" id="game-mods">Mods</div>
+                    </li>
+                    <li>
+                        <div class="header-menu-item" id="game-info">Information</div>
+                    </li>
+                </ul>
+            </div>
+        </div>
     </section>
     <section id="game-content">
-        <ul id="menu-items">
-            <li>
-                <div class="launch-btn" onclick="window.startCurrentGame()">Launch</div>
-            </li>
-            <li>
-                <div class="info-item">
-                    <div class="info-title">User</div>
-                    <div class="info-value" id="info-user"></div>
-                </div>
-            </li>
-            <li>
-                <div class="info-item">
-                    <div class="info-title">Developer</div>
-                    <div class="info-value" id="info-dev"></div>
-                </div>
-            </li>
-        </ul>
+        
     </section>
-    <section id="game-c"></section>
 </div>
 
 <script>
     require("./pages/games");
 
-    var currentGame;
-
     const { ipcRenderer } = electron;
-    const games = document.querySelector('#games');
-    ipcRenderer.on('item:add', function (e, appid) {
-        addApp(appid);
-    });
+    const gamesContainer = document.querySelector('#games');
 
-    ipcRenderer.on('item:clear', function () {
-        games.innerHTML = '';
-    });
+    const games = require("./games");
+    const steam = require("./types/steam");
+    const page = require("./pages");
 
-    window.removeItem = function(e) {
-        e.target.parentElement.remove();
-    }
+    page.registerPage("game-settings", "", "#game-content", {}, {type: ".header-menu-item", self: "#game-settings", active: "active"});
+    page.registerPage("game-stats", "", "#game-content", {}, {type: ".header-menu-item", self: "#game-stats", active: "active"});
+    page.registerPage("game-mods", "", "#game-content", {}, {type: ".header-menu-item", self: "#game-mods", active: "active"});
+    page.registerPage("game-info", "", "#game-content", {}, {type: ".header-menu-item", self: "#game-info", active: "active"});
 
     window.parseData = function(data, clear = false){
         if(clear)
-            games.innerHTML = "";
+            gamesContainer.innerHTML = "";
         for(const app of data){
             const div = document.createElement('div');
             const img = document.createElement('img');
@@ -63,19 +91,24 @@
             img.className = 'display-img';
             name.className = 'display-name';
             name.innerHTML = app.displayName;
-            div.setAttribute("ondblclick", "openApp("+app.appId+")");
-            div.setAttribute("onClick", "window.setCurrentGame("+app.appId+")")
+            $(div).dblclick(function(){
+                games.startGame(app.uniqueID);
+            });
+            $(div).click(function(){
+                window.setCurrentGame(app.uniqueID);
+            });
 
-            img.src = 'https://steamcdn-a.akamaihd.net/steamcommunity/public/images/apps/'+app.appId+'/'+app.icon+'.jpg';
+            var listData = games.getLibraryListInfo(app);
+
+            img.src = listData.img;
             div.appendChild(img);
             div.appendChild(name);
-            games.appendChild(div);
+            gamesContainer.appendChild(div);
         }
-        app_saveData();
     }
 
     window.startCurrentGame = function() {
-        openApp(currentGame.appId, app_data["apps"][currentGame.appId].user);
+        games.startGame(window.currentGame.info.uniqueID);
     }
 
     function sortData(data){
@@ -87,85 +120,67 @@
         return data;
     }
 
-    window.setCurrentGame = function(appId){
+    window.setCurrentGame = function(uniqueID){
         //https://steamcdn-a.akamaihd.net/steam/apps/4000/library_hero.jpg?t=1568744817
 
         const header = document.getElementById('header-img');
         const name = document.getElementById('header-name');
+        const type = document.getElementById('header-type');
 
-        image('https://steamcdn-a.akamaihd.net/steam/apps/'+appId+'/library_hero.jpg?t=1568744817', {
-            success : function () {
-                header.style.backgroundImage = "url('https://steamcdn-a.akamaihd.net/steam/apps/"+appId+"/library_hero.jpg?t=1568744817')";
-            },
-            failure : function () {
-                header.style.backgroundImage = "url('https://steamcdn-a.akamaihd.net/steam/apps/"+appId+"/header.jpg?t=1568744817')";
-            },
+        games.getLibraryInfo(uniqueID).then(data=>{
+            header.style.backgroundImage = "url('"+data.heroImage+"')";
+            name.innerText = data.info.displayName;
+            type.innerText = data.info.type;
+            window.currentGame = data;
+            document.querySelector("#info-user").innerHTML = data.user.name + '<i class="fas fa-chevron-down"></i>';
+            document.querySelector("#info-dev").innerText = data.info.developer.replace(/,/g, ", ");
+            
+            if(data.playtime)
+                document.querySelector("#info-time").innerText = Math.floor(data.playtime / 60) + "h";
+            else
+                document.querySelector("#info-time").innerText = "-";
+
+            page.loadPage("game-settings");
         });
-        getAppsById(function(app) {
-            name.innerText = app[0].displayName;
-            currentGame = app[0];
-            if(isDefined(app_data["apps"][appId].user))
-                document.querySelector("#info-user").innerHTML = app_data["apps"][appId].user + '<i class="fas fa-chevron-down"></i>';
-            document.querySelector("#info-dev").innerText = app[0].developer;
-        }, [appId])
     }
 
     window.loadDataUser = function(first = false){
-        var appsInCache = getAppIdsFromCache();
-        console.log("Loading "+appsInCache.length+" games");
-        getAppsById(function(apps) {
-            console.log("Game data received");
+        games.getGames().then(apps=>{
             apps = sortData(apps);
-            console.log("Game data sorted");
-            parseData(apps);
-            console.log("Game data parsed");
-            if(apps.length!=0)
-                window.setCurrentGame(apps[0].appId);
-            loadDataFromUsers(first);
-        }, appsInCache);
-    }
+            parseData(apps, true);
 
-    window.loadDataFromUsers = async function(first = false){
-        var users = app_getUsers();
-        var all_data = [];
-        var appIds = [];
-        var appsInCache = getAppIdsFromCache();
-        for(const user of users){
-            const currentUser = user;
-            let p = new Promise((res, rej) => {
-                getAppsFromUser(function(data){
-                    for(const app of data){
-                        if(appIds.includes(app.appId)){
-                            continue;
-                        }
-                        appIds.push(app.appId);
-
-                        if(!isDefined(app_data["apps"]))
-                            app_data["apps"] = {};
-                        if(!isDefined(app_data["apps"][app.appId]))
-                            app_data["apps"][app.appId] = {};
-                        if(!isDefined(app_data["apps"][app.appId]["user"]))
-                            app_data["apps"][app.appId]["user"] = currentUser.name;
-                        all_data.push(app);
-                    }
-                    res();
-                }, user.steam64id);
-            });
-            await p;
-        }
-
-        app_saveData();
-        if(appsInCache.length == all_data.length || all_data.length == 0)
-            return;
-        all_data = sortData(all_data);
-
-        parseData(all_data, true);
-        if(first&&all_data[0].appId!=null&&appsInCache.length==0){
-            window.setCurrentGame(all_data[0].appId);
-        }
+            if(window.currentGame && window.currentGame!=null){
+                setCurrentGame(window.currentGame.info.uniqueID);
+                return;
+            }
+            if(apps.length!=0){
+                setCurrentGame(apps[0].uniqueID);
+            }
+        });
     }
 
     window.loadDataUser(true);
+
+    function changeUser(e){
+        var users = steam.getUsers();
+        var options = [];
+
+        for (const user of users) {
+            var option = {};
+            option.name = user.name;
+            option.onClick = function(){
+                games.setUserOfGame(window.currentGame.info.uniqueID, user.name);
+                setCurrentGame(window.currentGame.info.uniqueID);
+            }
+            options.push(option);
+        }
+        showOptions({
+            width: $("#info-user").width(),
+            left: $("#info-user").offset().left,
+            top: $("#info-user").offset().top,
+            maxHeight: 200
+            }, options, e);
+    }
 
     (function(){
 
@@ -179,28 +194,21 @@
             parallax.style.backgroundPosition = elBackgrounPos;
         };
 
-        var users = app_getUsers();
-        options = [];
-
-        for (const user of users) {
-            var option = {};
-            option.name = user.name;
-            option.onClick = function(){
-                app_data["apps"][currentGame.appId]["user"] = user.name;
-                app_saveData();
-                setCurrentGame(currentGame.appId);
-            }
-            options.push(option);
-        }
-
         $("#info-user").click(function(e){
-            console.log($("#info-user").width());
-            showOptions({
-                width: $("#info-user").width(),
-                left: $("#info-user").offset().left,
-                top: $("#info-user").offset().top,
-                maxHeight: 200
-             }, options, e);
+            changeUser(e);
+        });
+
+        $("#game-settings").click(function(e){
+            page.loadPage("game-settings");
+        });
+        $("#game-stats").click(function(e){
+            page.loadPage("game-stats");
+        });
+        $("#game-mods").click(function(e){
+            page.loadPage("game-mods");
+        });
+        $("#game-info").click(function(e){
+            page.loadPage("game-info");
         });
     })();
 </script>

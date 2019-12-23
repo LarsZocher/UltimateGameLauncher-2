@@ -1,13 +1,15 @@
 "use strict";
 
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+
+var _typeof2 = _interopRequireDefault(require("@babel/runtime/helpers/typeof"));
 
 function $image(id) {
   return !id || id.nodeType === 1 ? id : document.getElementById(id);
 }
 
 function isType(o, t) {
-  return _typeof(o).indexOf(t.charAt(0).toLowerCase()) === 0;
+  return (0, _typeof2["default"])(o).indexOf(t.charAt(0).toLowerCase()) === 0;
 } // Here's the meat and potatoes
 
 

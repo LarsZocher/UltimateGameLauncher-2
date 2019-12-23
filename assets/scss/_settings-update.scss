@@ -75,9 +75,13 @@
 
     #s-u-bar-progress {
         position: absolute;
-        width: 50%;
+        width: 0%;
         height: 5px;
         background: rgb(12, 112, 206);
         z-index: 10;
     }
+}
+
+#updates-o-s-c {
+    float: none;
 }

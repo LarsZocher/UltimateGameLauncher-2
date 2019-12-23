@@ -64,8 +64,10 @@
     window.steamOffset = 0;
     window.steam2FA = false;
 
+    var steam = require("./types/steam");
+
     $("#co-openSteam").on("click", function() {
-        openSteam();
+        steam.openSteam();
     });
     $("#co-viewProfile").on("click", function() {
         if(window.steamUser)
@@ -181,7 +183,7 @@
         $("#current-user").text("");
         $("#code-time").css("transform", "");
 
-        if(!app_userHasSG(window.steamUser)){
+        if(!steam.hasUserSG(window.steamUser)){
             $("#tm-noSG").css("display", "grid");
             return;
         }
@@ -319,10 +321,10 @@
     }
 
     async function loadUsers(){
-        var users = app_getUsers();
+        var users = steam.getUsers();
         console.log("[SteamType] Loading users ("+users.length+")");
-        users.forEach(user => {
-            addUser(user);
+        users.forEach(async function(user) {
+            await addUser(user);
         });
         setTimeout(function(){
             if($(".user").length!=0)
@@ -340,7 +342,9 @@
         const e_btns = document.createElement('div');
         const e_switch = document.createElement('div');
 
-        var ui = await getSteamUserInfo(user.steam64id);
+        document.getElementById("user-list").appendChild(e_li);
+
+        var ui = await steam.getSteamUserInfo(user.steam64id);
 
         e_user.className = "user";
         e_back.className = "user-back";
@@ -357,7 +361,6 @@
         e_user.appendChild(e_name);
         e_user.appendChild(e_btns);
         e_li.appendChild(e_user);
-        document.getElementById("user-list").appendChild(e_li);
 
         e_user.addEventListener("click", function(){
             for (const o of document.querySelectorAll(".user")) {
@@ -375,7 +378,7 @@
                 $("#tm-pw").css("display", "grid");
                 $("#tm-noSG").css("display", "none");
             }
-            if(!app_userHasSG(window.steamUser)){
+            if(!steam.hasUserSG(window.steamUser)){
                 $("#tm-pw").css("display", "none");
                 $("#tm-noSG").css("display", "grid");
             }

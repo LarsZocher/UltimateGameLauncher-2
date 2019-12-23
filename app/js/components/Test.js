@@ -1,11 +1,13 @@
 "use strict";
 
+var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
+
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports["default"] = void 0;
+exports.Test = void 0;
 
 var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));
 
@@ -17,12 +19,14 @@ var _getPrototypeOf2 = _interopRequireDefault(require("@babel/runtime/helpers/ge
 
 var _inherits2 = _interopRequireDefault(require("@babel/runtime/helpers/inherits"));
 
-var _react = _interopRequireDefault(require("react"));
+var _react = _interopRequireWildcard(require("react"));
+
+var e = _react["default"].createElement;
 
 var Test =
 /*#__PURE__*/
-function (_React$Component) {
-  (0, _inherits2["default"])(Test, _React$Component);
+function (_Component) {
+  (0, _inherits2["default"])(Test, _Component);
 
   function Test() {
     (0, _classCallCheck2["default"])(this, Test);
@@ -32,10 +36,18 @@ function (_React$Component) {
   (0, _createClass2["default"])(Test, [{
     key: "render",
     value: function render() {
-      return _react["default"].createElement("div", null, _react["default"].createElement("h2", null, "Hello World!!!"));
+      var _this = this;
+
+      return 'button', {
+        onClick: function onClick() {
+          return _this.setState({
+            liked: true
+          });
+        }
+      }, 'Like';
     }
   }]);
   return Test;
-}(_react["default"].Component);
+}(_react.Component);
 
-exports["default"] = Test;
+exports.Test = Test;

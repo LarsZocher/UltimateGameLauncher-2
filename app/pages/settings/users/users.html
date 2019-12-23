@@ -14,6 +14,7 @@
                 </ul>
             </div>
             <div id="menu-ver">VERSION</div>
+            <div id="menu-ver-name">BubbleEgg</div>
         </div>
         <div class="menu-main-container">
             <div id="menu-main-content" class="menu-main">
@@ -23,6 +24,8 @@
     </div>
 </div>
 <script>
+
+    var steam = require("./types/steam");
 
     window.page.registerPage("settings-users-steam", "/settings/users/steamUser.html", "#menu-main-content", {}, {type: ".menu-li", active: "active"});
 
@@ -38,7 +41,7 @@
     }
 
     function loadSteamUsers(){
-        var users = app_getUsers();
+        var users = steam.getUsers();
         for (const user of users) {
             var li = $("<li></li>");
             li.append($('<div class="menu-li"></div>').text(user.name));

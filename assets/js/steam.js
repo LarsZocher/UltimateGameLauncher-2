@@ -250,7 +250,7 @@ async function getSteamUserInfo(steamId){
         xmlhttp.open("GET", "https://steamcommunity.com/profiles/"+steamId+"?xml=1", true);
         xmlhttp.send();
     });
-    return await p;
+    return p;
 }
 
 async function timeout(time){

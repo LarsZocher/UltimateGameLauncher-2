@@ -22,26 +22,14 @@
     <div class="s-container">
         <div class="s-name">Updates on startup</div>
         <div class="s-content">
-            <div class="onoffswitch">
-                <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="updates-o-s" checked>
-                <label class="onoffswitch-label" for="updates-o-s">
-                    <span class="onoffswitch-inner"></span>
-                    <span class="onoffswitch-switch"></span>
-                </label>
-            </div>
+            <div id="updates-o-s-c"></div>
             <div class="s-info">Check and install updates on program start.</div>
         </div>
     </div>
     <div class="s-container">
         <div class="s-name">Check for updates</div>
         <div class="s-content">
-            <div class="onoffswitch">
-                    <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="check-f-u" checked>
-                    <label class="onoffswitch-label" for="check-f-u">
-                        <span class="onoffswitch-inner"></span>
-                        <span class="onoffswitch-switch"></span>
-                    </label>
-                </div>
+            <div id="check-f-u-c"></div>
             <div class="s-info">Search automatically for updates and downloads them. Update gets installed on next startup.</div>
         </div>
     </div>
@@ -49,8 +37,7 @@
 <script>
     (function(){
         var config = require("../js/config");
-
-        console.log(config);
+        require("./pages/settings/update/update").init();
 
         ipcRenderer.on("message", function(event, text){
             $("#s-u-status").text(text);
@@ -70,17 +57,7 @@
         $("#restart-app").css("display", "none");
 
         $("#check-u").click(function(){
-            console.log("check");
             ipcRenderer.send("check-for-updates");
         });
-
-        $("#updates-o-s").click(function(){
-            config.set("settings.update.updatesOnStartup", $(this).prop('checked'));
-            config.saveData();
-        }).prop('checked', config.data.settings.update.updatesOnStartup);
-        $("#check-f-u").click(function(){
-            config.set("settings.update.checkForUpdates", $(this).prop('checked'));
-            config.saveData();
-        }).prop('checked', config.data.settings.update.checkForUpdates).prop('checked', config.data.settings.update.checkForUpdates);
     })();
 </script>
