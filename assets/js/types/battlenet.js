@@ -5,11 +5,9 @@ var userConfig = require("../config/users.js");
 var gamesConfig = require("../config/games.js");
 var Config = require("../config/config");
 var battleConfig = new Config("../Battle.net/Battle.net.config");
-
-var requestChache = [];
-var gamesCache = {};
-
+var uglConfig = require("../config");
 var electron = require('electron');
+
 let app;
 if(electron.remote)
     app = electron.remote.app;
@@ -18,12 +16,36 @@ else
 
 var vbsFile = path.join(app.getPath("userData"), "checkBattlenet.vbs");
 
+uglConfig.setDefault("battlenet.showAllGames", false);
+uglConfig.saveData();
 gamesConfig.setDefault("battlenet", {});
+
+var requestChache = [];
+var gamesCache = {};
+
+var hasBattlenet = battleConfig.exists();
+
+if(!hasBattlenet)
+    console.warn("[Battlenet] Battlenet was not found! Disabled Battlenet features");
 
 createVBSFile();
 
 function getGames(){
-    return requestGames();
+    if(!hasBattlenet) return [];
+    if(uglConfig.data.battlenet.showAllGames)
+        return requestGames();
+    else{
+        return new Promise(res=>{
+            var data = [];
+            requestGames().then(games=>{
+                for (const game of games) {
+                    if(hasGame(game.appId))
+                        data.push(game);
+                }
+                res(data);
+            });
+        });
+    }
 }
 
 function requestGames(){
@@ -144,7 +166,14 @@ function createVBSFile(){
     });
 }
 
+function hasGame(id){
+    var configName = gamesCache[id].configName;
+    return Object.keys(battleConfig.data.Games).includes(configName);
+}
+
 function getUsers(){
+    if(!hasBattlenet)
+        return [];
     return battleConfig.data.Client.SavedAccountNames.split(",");
 }
 
@@ -202,5 +231,6 @@ module.exports = {
     start,
     getUserOfGame,
     setUserOfGame,
-    getLibraryInfo
+    getLibraryInfo,
+    hasGame
 }

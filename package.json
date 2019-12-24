@@ -1,21 +1,16 @@
 {
   "name": "ugl",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "UltimateGameLauncher",
   "main": "app/js/main.js",
   "scripts": {
-    "startg": "gulp start",
     "startgw": "gulp watch",
     "start": "electron .",
     "scss": "npm run scss-dev && node-sass --importer=node_modules/node-sass-tilde-importer --watch assets/scss -o assets/css compressed",
     "scss-dev": "node-sass --importer=node_modules/node-sass-tilde-importer assets/scss -o assets/css compressed",
-    "package-mac": "electron-packager . --overwrite --platform=darwin --arch=x64 --icon=assets/icons/mac/icon.icns --prune=true --out=release-builds",
-    "package-win": "electron-packager . UltimateGameLauncher --overwrite --asar=true --platform=win32 --arch=ia32 --icon=assets/icons/win/icon.ico --prune=true --out=release-builds --version-string.CompanyName=CE --version-string.FileDescription=CE --version-string.ProductName=\"UltimateGameLauncher\"",
-    "package-linux": "electron-packager . electron-tutorial-app --overwrite --asar=true --platform=linux --arch=x64 --icon=assets/icons/png/icon.png --prune=true --out=release-builds",
     "pack": "electron-builder --dir",
     "dist": "electron-builder --win",
-    "gulp-dist": "gulp release",
-    "dist-win": "electron-builder --win -p always"
+    "gulp-dist": "gulp release"
   },
   "author": "Lars Zocher",
   "homepage": "https://ugl.seemslegit.me",
