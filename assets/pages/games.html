@@ -1,5 +1,5 @@
 <aside id="games-list">
-    <h2 class="gl-headline">STEAM</h2>
+    <h2 class="gl-headline">GAMES</h2>
     <div id="games">
 
     </div>
@@ -132,7 +132,7 @@
             name.innerText = data.info.displayName;
             type.innerText = data.info.type;
             window.currentGame = data;
-            document.querySelector("#info-user").innerHTML = data.user.name + '<i class="fas fa-chevron-down"></i>';
+            document.querySelector("#info-user").innerHTML = data.user + '<i class="fas fa-chevron-down"></i>';
             document.querySelector("#info-dev").innerText = data.info.developer.replace(/,/g, ", ");
             
             if(data.playtime)
@@ -146,6 +146,8 @@
 
     window.loadDataUser = function(first = false){
         games.getGames().then(apps=>{
+            if(apps==null || apps.length==0)
+                return;
             apps = sortData(apps);
             parseData(apps, true);
 
@@ -162,14 +164,14 @@
     window.loadDataUser(true);
 
     function changeUser(e){
-        var users = steam.getUsers();
+        var users = games.getUsernames(currentGame.info.type);
         var options = [];
 
         for (const user of users) {
             var option = {};
-            option.name = user.name;
+            option.name = user;
             option.onClick = function(){
-                games.setUserOfGame(window.currentGame.info.uniqueID, user.name);
+                games.setUserOfGame(window.currentGame.info.uniqueID, user);
                 setCurrentGame(window.currentGame.info.uniqueID);
             }
             options.push(option);

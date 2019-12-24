@@ -8,6 +8,12 @@ var Registry = require('winreg');
 
 var Config = require('../config/config');
 
+var fs = require('fs');
+
+var path = require('path');
+
+var vdf = require('simple-vdf');
+
 var userConfig = require("../config/users.js");
 
 userConfig.setDefault("steam", []);
@@ -28,32 +34,44 @@ if (oldConfig.exists()) {
 }
 
 function getGames() {
-  var ids = [];
-  var _iteratorNormalCompletion = true;
-  var _didIteratorError = false;
-  var _iteratorError = undefined;
+  return new Promise(function (res) {
+    var u = 1;
 
-  try {
-    for (var _iterator = getUsers()[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-      var user = _step.value;
-      ids.push(user.steam64id);
+    if (getUsers().length == 0) {
+      u = addUsersFromSteam();
     }
-  } catch (err) {
-    _didIteratorError = true;
-    _iteratorError = err;
-  } finally {
-    try {
-      if (!_iteratorNormalCompletion && _iterator["return"] != null) {
-        _iterator["return"]();
-      }
-    } finally {
-      if (_didIteratorError) {
-        throw _iteratorError;
-      }
-    }
-  }
 
-  return getGamesFromUsers(ids);
+    Promise.all([u]).then(function (values) {
+      var ids = [];
+      var _iteratorNormalCompletion = true;
+      var _didIteratorError = false;
+      var _iteratorError = undefined;
+
+      try {
+        for (var _iterator = getUsers()[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+          var user = _step.value;
+          ids.push(user.steam64id);
+        }
+      } catch (err) {
+        _didIteratorError = true;
+        _iteratorError = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion && _iterator["return"] != null) {
+            _iterator["return"]();
+          }
+        } finally {
+          if (_didIteratorError) {
+            throw _iteratorError;
+          }
+        }
+      }
+
+      getGamesFromUsers(ids).then(function (data) {
+        res(data);
+      });
+    });
+  });
 }
 
 function getAppsById(ids) {
@@ -363,6 +381,30 @@ function start(appid) {
   });
 }
 
+function addUsersFromSteam() {
+  return new Promise(function (res) {
+    getSteamPath().then(function (steamPath) {
+      var config = path.join(steamPath, "config/loginusers.vdf");
+      console.log("[Steam] Adding users known from steam in: " + config);
+
+      if (fs.existsSync(config)) {
+        var rawdata = fs.readFileSync(config, "utf8");
+        var data = vdf.parse(rawdata);
+
+        for (var user in data.users) {
+          addUser({
+            name: data.users[user].AccountName,
+            steam64id: user
+          });
+        }
+
+        res();
+        return;
+      }
+    });
+  });
+}
+
 function getUserOfGame(appid) {
   return new Promise(function (res) {
     if (appid != null) {
@@ -488,7 +530,7 @@ function getLibraryInfo(appid) {
               }
             });
             Promise.all([getUserOfGame(appid), appInfo, img]).then(function (values) {
-              data.user = values[0];
+              data.user = values[0].name;
               data.info = apps_cache[appid];
               if (apps_cache[appid].playtime && apps_cache[appid].playtime[data.user.steam64id]) data.playtime = apps_cache[appid].playtime[data.user.steam64id];
               res(data);
@@ -841,5 +883,6 @@ module.exports = {
   userConfig: userConfig,
   gamesConfig: gamesConfig,
   hasUserSecret: hasUserSecret,
-  hasUserSG: hasUserSG
+  hasUserSG: hasUserSG,
+  addUsersFromSteam: addUsersFromSteam
 };

@@ -1,6 +1,9 @@
 
 var Registry = require('winreg');
 var Config = require('../config/config');
+var fs = require('fs');
+var path = require('path');
+var vdf = require('simple-vdf');
 var userConfig = require("../config/users.js");
 userConfig.setDefault("steam", []);
 var gamesConfig = require("../config/games.js");
@@ -19,11 +22,23 @@ if(oldConfig.exists()){
 }
 
 function getGames(){
-    var ids = [];
-    for (const user of getUsers()) {
-        ids.push(user.steam64id);
-    }
-    return getGamesFromUsers(ids);
+    return new Promise(res=>{
+        var u = 1;
+
+        if(getUsers().length == 0){
+            u = addUsersFromSteam();
+        }
+
+        Promise.all([u]).then(values=>{
+            var ids = [];
+            for (const user of getUsers()) {
+                ids.push(user.steam64id);
+            }
+            getGamesFromUsers(ids).then(data=>{
+                res(data);
+            });
+        });
+    });
 }
 
 function getAppsById(ids, force = false){
@@ -143,7 +158,6 @@ function addUser(user){
         console.error("[Steam] Failed to add user");
 }
 
-
 async function start(appid, user = null){
     console.log("[Steam] Opening app "+appid+" with user '"+user+"'");
     var cu = await getCurrentUser();
@@ -159,6 +173,27 @@ async function start(appid, user = null){
         }
         console.log(`stdout: ${stdout}`);
         console.error(`stderr: ${stderr}`);
+    });
+}
+
+function addUsersFromSteam(){
+    return new Promise(res=>{
+        getSteamPath().then(steamPath=>{
+            var config = path.join(steamPath, "config/loginusers.vdf");
+            console.log("[Steam] Adding users known from steam in: "+config);
+            if(fs.existsSync(config)){
+                let rawdata = fs.readFileSync(config, "utf8");
+                var data = vdf.parse(rawdata);
+                for (const user in data.users) {
+                    addUser({
+                        name: data.users[user].AccountName,
+                        steam64id: user
+                    });
+                }
+                res();
+                return;
+            }
+        });
     });
 }
 
@@ -219,7 +254,7 @@ async function getLibraryInfo(appid){
             }
         });
         Promise.all([getUserOfGame(appid), appInfo, img]).then(values =>{
-            data.user = values[0];
+            data.user = values[0].name;
             data.info = apps_cache[appid];
             if(apps_cache[appid].playtime && apps_cache[appid].playtime[data.user.steam64id])
                 data.playtime = apps_cache[appid].playtime[data.user.steam64id];
@@ -422,5 +457,6 @@ module.exports = {
     userConfig,
     gamesConfig,
     hasUserSecret,
-    hasUserSG
+    hasUserSG,
+    addUsersFromSteam
 };
