@@ -19,6 +19,7 @@ var config = require("../js/config");
 var mainWindow;
 var addWindow;
 var updateWindow;
+console.log(process.argv);
 var updateFromSettings = false;
 config.setDefault("settings.update.updatesOnStartup", true);
 config.setDefault("settings.update.checkForUpdates", true);

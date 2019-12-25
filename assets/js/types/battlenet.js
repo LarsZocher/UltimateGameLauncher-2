@@ -122,7 +122,11 @@ async function start(id){
 
     var executablePath = "\""+ path.join(getBattlenetPath(), "Battle.net.exe")+"\" --exec=\"launch "+id+"\"";
     const { exec } = require('child_process');
-    exec(executablePath, (error, stdout, stderr) => {
+    exec(executablePath, 
+         { 
+             cwd: getBattlenetPath()
+         },
+         (error, stdout, stderr) => {
         if (error) {
             console.error(`exec error: ${error}`);
             return;
@@ -136,7 +140,11 @@ async function start(id){
             console.error(`exec error: ${error}`);
             return;
         }
-        exec(executablePath, (error, stdout, stderr) => {
+        exec(executablePath, 
+            { 
+                cwd: getBattlenetPath()
+            },
+            (error, stdout, stderr) => {
             if (error) {
                 console.error(`exec error: ${error}`);
                 return;

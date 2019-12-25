@@ -11,6 +11,8 @@ let mainWindow;
 let addWindow;
 let updateWindow;
 
+console.log(process.argv);
+
 var updateFromSettings = false;
 
 config.setDefault("settings.update.updatesOnStartup", true);

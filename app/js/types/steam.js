@@ -24,7 +24,7 @@ gamesConfig.setDefault("steam", {});
 var user_cache = {};
 var apps_cache = {};
 var appsUser_cache = {};
-var time_cache = {};
+var store_cache = {};
 var oldConfig = new Config("app_data.json");
 
 if (oldConfig.exists()) {
@@ -203,6 +203,28 @@ function getAppsById(ids) {
     }
 
     xmlhttp.open("GET", "https://ugl.seemslegit.me/api/getGames?uniqueID=" + toRequest.join(","), true);
+    xmlhttp.send();
+  });
+}
+
+function getStoreInfo(appid) {
+  return new Promise(function (res) {
+    if (store_cache[appid]) {
+      res(store_cache[appid]);
+      return;
+    }
+
+    var xmlhttp = new XMLHttpRequest();
+
+    xmlhttp.onreadystatechange = function () {
+      if (this.readyState == 4 && this.status == 200) {
+        var result = JSON.parse(this.responseText);
+        store_cache[appid] = result;
+        res(result);
+      }
+    };
+
+    xmlhttp.open("GET", "https://store.steampowered.com/api/appdetails?appids=" + appid, true);
     xmlhttp.send();
   });
 }
@@ -517,8 +539,15 @@ function getLibraryInfo(appid) {
                   re();
                 },
                 failure: function failure() {
-                  data.heroImage = "https://steamcdn-a.akamaihd.net/steam/apps/" + appid + "/header.jpg?t=1568744817";
-                  re();
+                  getStoreInfo(appid).then(function (info) {
+                    if (info[appid].success) {
+                      data.heroImage = info[appid].data.screenshots[0].path_full;
+                      re();
+                    } else {
+                      data.heroImage = "https://steamcdn-a.akamaihd.net/steam/apps/" + appid + "/header.jpg?t=1568744817";
+                      re();
+                    }
+                  });
                 }
               });
             });
@@ -884,5 +913,6 @@ module.exports = {
   gamesConfig: gamesConfig,
   hasUserSecret: hasUserSecret,
   hasUserSG: hasUserSG,
-  addUsersFromSteam: addUsersFromSteam
+  addUsersFromSteam: addUsersFromSteam,
+  getStoreInfo: getStoreInfo
 };
