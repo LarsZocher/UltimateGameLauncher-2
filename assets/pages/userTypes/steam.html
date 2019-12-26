@@ -333,6 +333,7 @@
     }
 
     async function addUser(user){
+        const u = user;
         console.log("[SteamType] Adding user: "+user.name);
 
         const e_li = document.createElement('li');
@@ -354,7 +355,9 @@
         e_btns.className = "user-btns";
         e_switch.className = "user-switch";
         e_switch.innerText = "SWITCH";
-        e_switch.setAttribute("onClick", "changeUser('"+user.name+"')");
+        $(e_switch).click(function(){
+            steam.changeUser(u.name);
+        });
 
         e_btns.appendChild(e_switch);
         e_user.appendChild(e_back);

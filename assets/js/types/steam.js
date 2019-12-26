@@ -381,7 +381,7 @@ async function getCurrentUser(){
 }
 
 
-async function changeUser(name, openSteam = true){
+async function changeUser(name, oSteam = true){
     console.log("[Steam] Changing user to: "+name);
     var running = await isRunning();
     if(running){
@@ -394,8 +394,8 @@ async function changeUser(name, openSteam = true){
     });
     let p = new Promise((res, rej) => {
         regKey.set('AutoLoginUser', Registry.REG_SZ, name, function() {
-            if(openSteam){
-                this.openSteam();
+            if(oSteam){
+                openSteam();
             }
             res();
         });

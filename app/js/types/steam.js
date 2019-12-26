@@ -757,7 +757,7 @@ function getCurrentUser() {
 }
 
 function changeUser(name) {
-  var openSteam,
+  var oSteam,
       running,
       regKey,
       p,
@@ -766,7 +766,7 @@ function changeUser(name) {
     while (1) {
       switch (_context10.prev = _context10.next) {
         case 0:
-          openSteam = _args10.length > 1 && _args10[1] !== undefined ? _args10[1] : true;
+          oSteam = _args10.length > 1 && _args10[1] !== undefined ? _args10[1] : true;
           console.log("[Steam] Changing user to: " + name);
           _context10.next = 4;
           return _regenerator["default"].awrap(isRunning());
@@ -790,8 +790,8 @@ function changeUser(name) {
           });
           p = new Promise(function (res, rej) {
             regKey.set('AutoLoginUser', Registry.REG_SZ, name, function () {
-              if (openSteam) {
-                this.openSteam();
+              if (oSteam) {
+                openSteam();
               }
 
               res();
