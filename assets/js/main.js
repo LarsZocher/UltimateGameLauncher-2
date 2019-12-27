@@ -11,7 +11,22 @@ let mainWindow;
 let addWindow;
 let updateWindow;
 
+var isStartingGame = false;
+
 console.log(process.argv);
+for (let index = 0; index < process.argv.length; index++) {
+    const arg = process.argv[index];
+    if(arg.startsWith("-startApp") && index+1 < process.argv.length){
+        var games = require("./games");
+        isStartingGame = true;
+        games.startGame(process.argv[index+1], ()=>{
+            console.log("[UGL] Stopping UGL");
+            app.quit();
+        });
+    }
+}
+
+if(!isStartingGame){
 
 var updateFromSettings = false;
 
@@ -237,4 +252,6 @@ if (process.env.NODE_ENV !== 'production') {
             }
         ]
     });
+}
+
 }

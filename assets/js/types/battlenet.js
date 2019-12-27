@@ -99,11 +99,32 @@ function closeBattlenet(){
     });
 }
 
-async function start(id){
+function openClient() {
+    var executablePath = "\""+ path.join(getBattlenetPath(), "Battle.net.exe")+"\"";
+    const { exec } = require('child_process');
+
+    console.log("[Battlenet] starting battlenet");
+    exec(executablePath, 
+        { 
+            cwd: getBattlenetPath()
+        },
+        (error, stdout, stderr) => {
+        if (error) {
+            console.error(`exec error: ${error}`);
+            return;
+        }
+        console.log(`stdout: ${stdout}`);
+        console.error(`stderr: ${stderr}`);
+    });
+}
+
+async function start(id, cb = null){
+    console.log("[Battlenet] starting "+id);
     var user = await getUserOfGame(id);
     var changedUser = false;
     var before = [...getUsers()];
     console.log(user+" | "+ getUsers()[0]);
+
     if(getUsers()[0]!=user){
         var after = [user];
         for (const u of getUsers()) {
@@ -115,6 +136,7 @@ async function start(id){
         changedUser = true;
     }
     if(await isRunning()){
+        console.log("[Battlenet] closing battlenet");
         closeBattlenet();
     }
 
@@ -122,11 +144,13 @@ async function start(id){
 
     var executablePath = "\""+ path.join(getBattlenetPath(), "Battle.net.exe")+"\" --exec=\"launch "+id+"\"";
     const { exec } = require('child_process');
+
+    console.log("[Battlenet] starting battlenet 1");
     exec(executablePath, 
-         { 
-             cwd: getBattlenetPath()
-         },
-         (error, stdout, stderr) => {
+        { 
+            cwd: getBattlenetPath()
+        },
+        (error, stdout, stderr) => {
         if (error) {
             console.error(`exec error: ${error}`);
             return;
@@ -135,11 +159,13 @@ async function start(id){
         console.error(`stderr: ${stderr}`);
     });
 
+    console.log("[Battlenet] starting vbs");
     exec(vbsFile, (error, stdout, stderr) => {
         if (error) {
             console.error(`exec error: ${error}`);
             return;
         }
+        console.log("[Battlenet] starting battlenet 2");
         exec(executablePath, 
             { 
                 cwd: getBattlenetPath()
@@ -151,6 +177,7 @@ async function start(id){
             }
             console.log(`stdout: ${stdout}`);
             console.error(`stderr: ${stderr}`);
+            console.log("[Battlenet] starting done!");
             if(changedUser){
                 setTimeout(()=>{
                     console.log(before);
@@ -158,7 +185,12 @@ async function start(id){
                     battleConfig.data.Client.SavedAccountNames = before.join(",");
                     console.log(battleConfig.data.Client.SavedAccountNames);
                     battleConfig.save();
+                    if(cb!=null)
+                        cb();
                 },1000);
+            }else{
+                if(cb!=null)
+                    cb();
             }
         });
     });
@@ -223,6 +255,15 @@ function getBattlenetPath(){
     return null;
 }
 
+function getShortcutOptions(id){
+    return new Promise(res=>{
+        var data = {};
+        data.img = "https://ugl.seemslegit.me/resources/BATTLENET/icon/"+id+".png";
+        data.name = gamesCache[id].displayName;
+        res(data);
+    });
+}
+
 async function timeout(time){
     let p = new Promise((res, rej) => {
         setTimeout(()=>{
@@ -240,5 +281,7 @@ module.exports = {
     getUserOfGame,
     setUserOfGame,
     getLibraryInfo,
-    hasGame
+    hasGame,
+    getShortcutOptions,
+    openClient
 }

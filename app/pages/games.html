@@ -57,6 +57,21 @@
                         <div class="header-menu-item" id="game-info">Information</div>
                     </li>
                 </ul>
+
+                <ul id="minibtn-menu">
+                    <li>
+                        <div class="minibtn-menu-item" id="openClient">
+                            <i class="fas fa-external-link-alt"></i>
+                            <div class="minibtn-tt" style="margin-left: -45px; width: 90px;">Open client</div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="minibtn-menu-item" id="createShortcut">
+                            <i class="fas fa-reply"></i>
+                            <div class="minibtn-tt" style="margin-left: -110px; width: 130px;">Desktop shortcut</div>
+                        </div>
+                    </li>
+                </ul>
             </div>
         </div>
     </section>
@@ -211,6 +226,18 @@
         });
         $("#game-info").click(function(e){
             page.loadPage("game-info");
+        });
+        $("#createShortcut").click(function(e){
+            if(currentGame && currentGame!=null && currentGame.info){
+                games.createShortcut(currentGame.info.uniqueID).then(err=>{
+                    console.log(err);
+                });
+            }
+        });
+        $("#openClient").click(function(e){
+            if(currentGame && currentGame!=null && currentGame.info){
+                games.openClientUID(currentGame.info.uniqueID);
+            }
         });
     })();
 </script>

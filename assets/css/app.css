@@ -315,8 +315,12 @@ div {
     color: #FFF;
     margin: 0;
     font-size: 20px; }
+  #header-section .header-menu-container {
+    position: relative; }
   #header-section #header-menu {
-    margin: 0; }
+    margin: 0;
+    width: auto;
+    float: left; }
     #header-section #header-menu li {
       margin-right: 30px;
       display: inline-block;
@@ -342,6 +346,47 @@ div {
       left: 50%;
       bottom: -4px;
       margin-left: -15px; }
+
+#minibtn-menu {
+  margin: 0;
+  width: auto;
+  float: right; }
+  #minibtn-menu li {
+    margin-right: 5px;
+    display: inline-block;
+    position: relative; }
+    #minibtn-menu li .minibtn-menu-item {
+      width: 32px;
+      height: 32px;
+      background: #68686855;
+      color: #FFF;
+      line-height: 32px;
+      font-size: 20px;
+      text-align: center;
+      border-radius: 2px;
+      transition: all .2s ease-in-out;
+      position: relative; }
+      #minibtn-menu li .minibtn-menu-item .minibtn-tt {
+        visibility: hidden;
+        opacity: 0;
+        bottom: 110%;
+        left: 50%;
+        margin-left: -50%;
+        padding: 0 5px 0 5px;
+        z-index: 100;
+        color: white;
+        position: absolute;
+        font-size: 15px;
+        background: #68686871;
+        transition: all .2s linear; }
+    #minibtn-menu li .minibtn-menu-item:hover {
+      background: rgba(12, 112, 206, 0.514); }
+    #minibtn-menu li .minibtn-menu-item:hover .minibtn-tt {
+      opacity: 1;
+      visibility: visible;
+      display: inline-block; }
+  #minibtn-menu li:last-child {
+    margin-right: 0; }
 
 #games-main {
   width: calc(100% - 300px);
@@ -379,6 +424,9 @@ div {
 
 .display:hover {
   background: #FFFFFF10; }
+
+.header-interact {
+  overflow: hidden; }
 
 #header-interact-menu {
   display: inline-block;
@@ -430,6 +478,7 @@ div {
   color: #FFF;
   line-height: 50px;
   font-size: 25px;
+  border-radius: 2px;
   text-transform: uppercase;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   text-align: center;

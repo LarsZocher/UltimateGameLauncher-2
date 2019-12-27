@@ -96,9 +96,15 @@
         font-size: 20px;
     }
 
+    .header-menu-container{
+        position: relative;
+    }
+
     #header-menu {
 
         margin: 0;
+        width: auto;
+        float: left;
 
         li {
             margin-right: 30px;
@@ -137,6 +143,64 @@
             margin-left: -15px;
         }
     }
+}
+
+#minibtn-menu {
+
+    margin: 0;
+    width: auto;
+    float: right;
+
+    li {
+        margin-right: 5px;
+        display: inline-block;
+        position: relative;
+
+        .minibtn-menu-item {
+            width: 32px;
+            height: 32px;
+            background: #68686855;
+            color: #FFF;
+            line-height: 32px;
+            font-size: 20px;
+            text-align: center;
+            border-radius: 2px;
+            transition: all .2s ease-in-out;
+            position: relative;
+            //border: solid ;
+
+            .minibtn-tt {
+                visibility: hidden;
+                opacity: 0;
+                bottom: 110%;
+                left: 50%;
+                margin-left: -50%;
+                padding: 0 5px 0 5px;
+                z-index: 100;
+                color: white;
+                position: absolute;
+                font-size: 15px;
+                background: #68686871;
+                transition: all .2s linear;
+            }
+        }
+
+        .minibtn-menu-item:hover{
+            background: rgba(12, 112, 206, 0.514);
+        }
+
+        .minibtn-menu-item:hover .minibtn-tt {
+            opacity: 1;
+            visibility: visible;
+            display: inline-block;
+        }
+    }
+
+    li:last-child {
+        margin-right: 0;
+    }
+
+
 }
 
 #games-main {
@@ -180,6 +244,10 @@
 
 .display:hover{
     background: #FFFFFF10;
+}
+
+.header-interact {
+    overflow: hidden;
 }
 
 #header-interact-menu {
@@ -248,6 +316,7 @@
     color: #FFF;
     line-height: 50px;
     font-size: 25px;
+    border-radius: 2px;
     text-transform: uppercase;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     text-align: center;

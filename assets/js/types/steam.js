@@ -8,6 +8,7 @@ var userConfig = require("../config/users.js");
 userConfig.setDefault("steam", []);
 var gamesConfig = require("../config/games.js");
 gamesConfig.setDefault("steam", {});
+var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
 
 var user_cache = {};
 var apps_cache = {};
@@ -178,7 +179,7 @@ function addUser(user){
         console.error("[Steam] Failed to add user");
 }
 
-async function start(appid, user = null){
+async function start(appid, user = null, cb = null){
     console.log("[Steam] Opening app "+appid+" with user '"+user+"'");
     var cu = await getCurrentUser();
     if(user!=null && cu != user){
@@ -194,6 +195,10 @@ async function start(appid, user = null){
         console.log(`stdout: ${stdout}`);
         console.error(`stderr: ${stderr}`);
     });
+    setTimeout(()=>{
+        if(cb!=null)
+            cb();
+    }, 1000);
 }
 
 function addUsersFromSteam(){
@@ -290,6 +295,17 @@ async function getLibraryInfo(appid){
     });
 }
 
+function getShortcutOptions(appid){
+    return new Promise(res=>{
+        var data = {};
+        getAppsById([appid]).then(info=>{
+            data.img = "https://steamcdn-a.akamaihd.net/steamcommunity/public/images/apps/"+appid+"/"+info[0].clientIcon+".ico";
+            data.name = info[0].displayName;
+            res(data);
+        });
+    });
+}
+
 async function isRunning(){
     var executablePath = "tasklist";
     const util = require('util');
@@ -379,7 +395,6 @@ async function getCurrentUser(){
     }
     return "";
 }
-
 
 async function changeUser(name, oSteam = true){
     console.log("[Steam] Changing user to: "+name);
@@ -486,5 +501,6 @@ module.exports = {
     hasUserSecret,
     hasUserSG,
     addUsersFromSteam,
-    getStoreInfo
+    getStoreInfo,
+    getShortcutOptions
 };

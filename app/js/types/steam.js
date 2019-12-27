@@ -21,6 +21,9 @@ userConfig.setDefault("steam", []);
 var gamesConfig = require("../config/games.js");
 
 gamesConfig.setDefault("steam", {});
+
+var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
+
 var user_cache = {};
 var apps_cache = {};
 var appsUser_cache = {};
@@ -348,6 +351,7 @@ function addUser(user) {
 
 function start(appid) {
   var user,
+      cb,
       cu,
       executablePath,
       _require,
@@ -359,26 +363,27 @@ function start(appid) {
       switch (_context2.prev = _context2.next) {
         case 0:
           user = _args2.length > 1 && _args2[1] !== undefined ? _args2[1] : null;
+          cb = _args2.length > 2 && _args2[2] !== undefined ? _args2[2] : null;
           console.log("[Steam] Opening app " + appid + " with user '" + user + "'");
-          _context2.next = 4;
+          _context2.next = 5;
           return _regenerator["default"].awrap(getCurrentUser());
 
-        case 4:
+        case 5:
           cu = _context2.sent;
 
           if (!(user != null && cu != user)) {
-            _context2.next = 8;
+            _context2.next = 9;
             break;
           }
 
-          _context2.next = 8;
+          _context2.next = 9;
           return _regenerator["default"].awrap(changeUser(user, false));
 
-        case 8:
-          _context2.next = 10;
+        case 9:
+          _context2.next = 11;
           return _regenerator["default"].awrap(getSteamExe());
 
-        case 10:
+        case 11:
           _context2.t0 = _context2.sent;
           _context2.t1 = "\"" + _context2.t0;
           _context2.t2 = _context2.t1 + "\" -applaunch ";
@@ -394,8 +399,11 @@ function start(appid) {
             console.log("stdout: ".concat(stdout));
             console.error("stderr: ".concat(stderr));
           });
+          setTimeout(function () {
+            if (cb != null) cb();
+          }, 1000);
 
-        case 17:
+        case 19:
         case "end":
           return _context2.stop();
       }
@@ -571,6 +579,17 @@ function getLibraryInfo(appid) {
           return _context3.stop();
       }
     }
+  });
+}
+
+function getShortcutOptions(appid) {
+  return new Promise(function (res) {
+    var data = {};
+    getAppsById([appid]).then(function (info) {
+      data.img = "https://steamcdn-a.akamaihd.net/steamcommunity/public/images/apps/" + appid + "/" + info[0].clientIcon + ".ico";
+      data.name = info[0].displayName;
+      res(data);
+    });
   });
 }
 
@@ -914,5 +933,6 @@ module.exports = {
   hasUserSecret: hasUserSecret,
   hasUserSG: hasUserSG,
   addUsersFromSteam: addUsersFromSteam,
-  getStoreInfo: getStoreInfo
+  getStoreInfo: getStoreInfo,
+  getShortcutOptions: getShortcutOptions
 };
