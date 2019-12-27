@@ -149,7 +149,7 @@
             window.currentGame = data;
             document.querySelector("#info-user").innerHTML = data.user + '<i class="fas fa-chevron-down"></i>';
             document.querySelector("#info-dev").innerText = data.info.developer.replace(/,/g, ", ");
-            
+
             if(data.playtime)
                 document.querySelector("#info-time").innerText = Math.floor(data.playtime / 60) + "h";
             else

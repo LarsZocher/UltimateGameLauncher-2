@@ -288,8 +288,8 @@ async function getLibraryInfo(appid){
         Promise.all([getUserOfGame(appid), appInfo, img]).then(values =>{
             data.user = values[0].name;
             data.info = apps_cache[appid];
-            if(apps_cache[appid].playtime && apps_cache[appid].playtime[data.user.steam64id])
-                data.playtime = apps_cache[appid].playtime[data.user.steam64id];
+            if(apps_cache[appid].playtime && apps_cache[appid].playtime[values[0].steam64id])
+                data.playtime = apps_cache[appid].playtime[values[0].steam64id];
             res(data);
         });
     });
