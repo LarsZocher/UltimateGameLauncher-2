@@ -9,6 +9,7 @@ userConfig.setDefault("steam", []);
 var gamesConfig = require("../config/games.js");
 gamesConfig.setDefault("steam", {});
 var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
+var uglConfig = require("../config");
 
 var user_cache = {};
 var apps_cache = {};
@@ -21,6 +22,10 @@ if(oldConfig.exists()){
     userConfig.save();
     oldConfig.delete();
 }
+
+uglConfig.setDefault("steam.showOnlyScreenshots", false);
+uglConfig.setDefault("steam.showRandomScreenshots", false);
+uglConfig.saveData();
 
 
 function getGames(){
@@ -260,23 +265,40 @@ async function getLibraryInfo(appid){
     return new Promise(res => {
         var data = {};
         var img = new Promise(re=>{
-            image('https://steamcdn-a.akamaihd.net/steam/apps/'+appid+'/library_hero.jpg?t=1568744817', {
-                success : function () {
-                    data.heroImage = "https://steamcdn-a.akamaihd.net/steam/apps/"+appid+"/library_hero.jpg?t=1568744817";
-                    re();
-                },
-                failure : function () {
-                    getStoreInfo(appid).then(info=>{
-                        if(info[appid].success){
-                            data.heroImage = info[appid].data.screenshots[0].path_full;
-                            re();
-                        }else{
-                            data.heroImage = "https://steamcdn-a.akamaihd.net/steam/apps/"+appid+"/header.jpg?t=1568744817";
-                            re();
-                        }
-                    });
-                },
+            var screenshot = "";
+            var store = new Promise(r=>{
+                getStoreInfo(appid).then(info=>{
+                    if(info[appid].success){
+                        var imgId = 0;
+                        if(uglConfig.data.steam.showRandomScreenshots)
+                            imgId = Math.floor(Math.random() * info[appid].data.screenshots.length);
+                        screenshot = info[appid].data.screenshots[imgId].path_full;
+                        r();
+                    }else{
+                        screenshot = "https://steamcdn-a.akamaihd.net/steam/apps/"+appid+"/header.jpg?t=1568744817";
+                        r();
+                    }
+                });
             });
+            if(!uglConfig.data.steam.showOnlyScreenshots){
+                image('https://steamcdn-a.akamaihd.net/steam/apps/'+appid+'/library_hero.jpg?t=1568744817', {
+                    success : function () {
+                        data.heroImage = "https://steamcdn-a.akamaihd.net/steam/apps/"+appid+"/library_hero.jpg?t=1568744817";
+                        re();
+                    },
+                    failure : function () {
+                        store.then(()=>{
+                            data.heroImage = screenshot;
+                            re();
+                        });
+                    },
+                });
+            }else{
+                store.then(()=>{
+                    data.heroImage = screenshot;
+                    re();
+                });
+            }
         });
         var appInfo = new Promise(re => {
             if(apps_cache[appid]){
