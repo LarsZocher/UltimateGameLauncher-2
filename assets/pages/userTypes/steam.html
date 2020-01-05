@@ -66,6 +66,10 @@
 
     var steam = require("./types/steam");
 
+    var React = require('react');
+    var ReactDOM  = require('react-dom');
+    var SteamUserDisplay = require('../js/containers/SteamUserDisplay');
+
     $("#co-openSteam").on("click", function() {
         steam.openSteam();
     });
@@ -323,73 +327,55 @@
     async function loadUsers(){
         var users = steam.getUsers();
         console.log("[SteamType] Loading users ("+users.length+")");
-        users.forEach(async function(user) {
-            await addUser(user);
-        });
-        setTimeout(function(){
-            if($(".user").length!=0)
-                $(".user")[0].click();
-        },20);
+        userObj = [];
+
+        for (let i = 0; i < users.length; i++) {
+            addUser(users[i], i==0);
+        }
+        if(users.length>0){
+            onUserClick(users[0]);
+        }
     }
 
-    async function addUser(user){
+    var userObj = [];
+
+    function onUserClick(user){
+        var usr_before = window.steamUser;
+        window.steamUser = user;
+
+        clearScreen();
+        if(!window.steamSecret){
+            $("#tm-pw").css("display", "grid");
+            $("#tm-noSG").css("display", "none");
+        }
+        if(!steam.hasUserSG(window.steamUser)){
+            $("#tm-pw").css("display", "none");
+            $("#tm-noSG").css("display", "grid");
+        }
+
+        if(window.steamSecret && usr_before.steam64id != user.steam64id)
+            loadCode();
+    }
+
+    function addUser(user, sel){
         const u = user;
         console.log("[SteamType] Adding user: "+user.name);
 
         const e_li = document.createElement('li');
-        const e_user = document.createElement('div');
-        const e_back = document.createElement('div');
-        const e_name = document.createElement('div');
-        const e_btns = document.createElement('div');
-        const e_switch = document.createElement('div');
+        var obj = null;
+        var click = (()=>{
+            for (const usero of userObj) {
+                usero.toggle(false);
+            }
+            obj.toggle(true);
+
+            onUserClick(user);
+        });
+
+        obj = ReactDOM.render(React.createElement(SteamUserDisplay.default, {selected: sel, onClick: click, user: user}, null), e_li);
+        userObj.push(obj);
 
         document.getElementById("user-list").appendChild(e_li);
-
-        var ui = await steam.getSteamUserInfo(user.steam64id);
-
-        e_user.className = "user";
-        e_back.className = "user-back";
-        e_back.style.backgroundImage = 'url("'+ui.getElementsByTagName("avatarFull")[0].childNodes[0].nodeValue+'")';
-        e_name.className = "user-name";
-        e_name.innerText = ui.getElementsByTagName("steamID")[0].childNodes[0].nodeValue;
-        e_btns.className = "user-btns";
-        e_switch.className = "user-switch";
-        e_switch.innerText = "SWITCH";
-        $(e_switch).click(function(){
-            steam.changeUser(u.name);
-        });
-
-        e_btns.appendChild(e_switch);
-        e_user.appendChild(e_back);
-        e_user.appendChild(e_name);
-        e_user.appendChild(e_btns);
-        e_li.appendChild(e_user);
-
-        e_user.addEventListener("click", function(){
-            for (const o of document.querySelectorAll(".user")) {
-                if(o.classList.contains("active"))
-                    o.classList.remove("active");
-            }
-            e_user.classList.add("active");
-
-            var usr_before = window.steamUser;
-            window.steamUser = user;
-            window.steamUser.nickname = ui.getElementsByTagName("steamID")[0].childNodes[0].nodeValue;
-
-            clearScreen();
-            if(!window.steamSecret){
-                $("#tm-pw").css("display", "grid");
-                $("#tm-noSG").css("display", "none");
-            }
-            if(!steam.hasUserSG(window.steamUser)){
-                $("#tm-pw").css("display", "none");
-                $("#tm-noSG").css("display", "grid");
-            }
-
-            if(window.steamSecret && usr_before.steam64id != user.steam64id)
-                loadCode();
-            
-        });
     }
 
     loadUsers();

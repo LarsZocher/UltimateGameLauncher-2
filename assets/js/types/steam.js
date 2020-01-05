@@ -273,7 +273,15 @@ async function getLibraryInfo(appid){
                         if(uglConfig.data.steam.showRandomScreenshots)
                             imgId = Math.floor(Math.random() * info[appid].data.screenshots.length);
                         screenshot = info[appid].data.screenshots[imgId].path_full;
-                        r();
+                        image(screenshot, {
+                            success : function () {
+                                r();
+                            },
+                            failure : function () {
+                                screenshot = "https://steamcdn-a.akamaihd.net/steam/apps/"+appid+"/header.jpg?t=1568744817";
+                                r();
+                            },
+                        });
                     }else{
                         screenshot = "https://steamcdn-a.akamaihd.net/steam/apps/"+appid+"/header.jpg?t=1568744817";
                         r();
